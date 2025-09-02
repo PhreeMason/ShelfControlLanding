@@ -243,18 +243,31 @@ function animateOnLoad() {
         }, 1000);
     }
     
-    // Stagger animation for mock items
-    const mockItems = document.querySelectorAll('.mock-item');
-    mockItems.forEach((item, index) => {
+    // Stagger animation for book items
+    const bookItems = document.querySelectorAll('.book-item');
+    bookItems.forEach((item, index) => {
         item.style.opacity = '0';
-        item.style.transform = 'translateX(-20px)';
+        item.style.transform = 'translateY(10px)';
         
         setTimeout(() => {
             item.style.transition = 'all 0.5s ease';
             item.style.opacity = '1';
-            item.style.transform = 'translateX(0)';
-        }, 1200 + (index * 100));
+            item.style.transform = 'translateY(0)';
+        }, 1400 + (index * 150));
     });
+    
+    // Progress bars will animate together with the counters below
+    
+    // Animate sparkle
+    const sparkle = document.querySelector('.sparkle');
+    if (sparkle) {
+        setInterval(() => {
+            sparkle.style.transform = 'scale(1.2) rotate(10deg)';
+            setTimeout(() => {
+                sparkle.style.transform = 'scale(1) rotate(0deg)';
+            }, 200);
+        }, 3000);
+    }
 }
 
 // Add CSS for navbar scrolled state
@@ -409,6 +422,90 @@ function initMobileMenu() {
 
 // Initialize mobile menu
 initMobileMenu();
+
+// Add interactive animations to mockup
+function initMockupInteractions() {
+    const bookItems = document.querySelectorAll('.book-item');
+    const progressFill = document.querySelector('.progress-fill');
+    
+    // Add click interactions to book items
+    bookItems.forEach(item => {
+        item.addEventListener('click', () => {
+            item.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                item.style.transform = '';
+            }, 150);
+        });
+    });
+    
+    // Animate progress bar on hover
+    if (progressFill) {
+        progressFill.addEventListener('mouseenter', () => {
+            progressFill.style.background = 'linear-gradient(90deg, #E8C2B9 0%, #D4A574 100%)';
+        });
+        
+        progressFill.addEventListener('mouseleave', () => {
+            progressFill.style.background = 'linear-gradient(90deg, #E8C2B9 0%, #B8A9D9 100%)';
+        });
+    }
+    
+    // Number counting animations with progress bars
+    const statValues = document.querySelectorAll('.stat-value');
+    const progressFills = document.querySelectorAll('.progress-fill');
+    
+    // Pages counter with progress bar
+    if (statValues.length > 0) {
+        let count = 0;
+        const target = 22;
+        const targetTotal = 91;
+        const increment = target / 30;
+        
+        setTimeout(() => {
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    count = target;
+                    clearInterval(timer);
+                }
+                const currentCount = Math.floor(count);
+                const progressPercent = (currentCount / targetTotal) * 100;
+                
+                statValues[0].textContent = `${currentCount}/91`;
+                if (progressFills.length > 0) {
+                    progressFills[0].style.width = `${progressPercent}%`;
+                }
+            }, 50);
+        }, 1800);
+    }
+    
+    // Audio counter with progress bar (minutes)
+    if (statValues.length > 1) {
+        let minutes = 0;
+        const targetMinutes = 13;
+        const totalMinutes = 67; // 1h 7m = 67 minutes
+        const increment = targetMinutes / 25;
+        
+        setTimeout(() => {
+            const timer = setInterval(() => {
+                minutes += increment;
+                if (minutes >= targetMinutes) {
+                    minutes = targetMinutes;
+                    clearInterval(timer);
+                }
+                const currentMinutes = Math.floor(minutes);
+                const progressPercent = (currentMinutes / totalMinutes) * 100;
+                
+                statValues[1].textContent = `${currentMinutes}m/1h 7m`;
+                if (progressFills.length > 1) {
+                    progressFills[1].style.width = `${progressPercent}%`;
+                }
+            }, 50);
+        }, 1900);
+    }
+}
+
+// Initialize mockup interactions after page load
+setTimeout(initMockupInteractions, 2000);
 
 // Window resize handler
 let resizeTimer;
