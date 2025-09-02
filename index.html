@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelfControl - From drowning to floating</title>
+    <meta name="description" content="ShelfControl shows which ARCs you can actually finish on time. For the 73% who wing it with deadlines.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">From drowning to floating</h1>
+                <p class="hero-subtitle">ShelfControl shows which ARCs you can actually finish on time</p>
+                
+                <div class="hero-visual">
+                    <div class="mobile-mockup">
+                        <div class="phone-frame">
+                            <div class="screen">
+                                <div class="app-header">Priority List</div>
+                                <div class="book-item priority-high">
+                                    <div class="book-info">
+                                        <div class="book-title">The Seven Moons</div>
+                                        <div class="book-meta">Due: Sept 15 • 320 pages</div>
+                                    </div>
+                                    <div class="priority-indicator high"></div>
+                                </div>
+                                <div class="book-item priority-medium">
+                                    <div class="book-info">
+                                        <div class="book-title">Digital Hearts</div>
+                                        <div class="book-meta">Due: Sept 25 • 280 pages</div>
+                                    </div>
+                                    <div class="priority-indicator medium"></div>
+                                </div>
+                                <div class="book-item priority-low">
+                                    <div class="book-info">
+                                        <div class="book-title">Garden of Secrets</div>
+                                        <div class="book-meta">Due: Oct 5 • 400 pages</div>
+                                    </div>
+                                    <div class="priority-indicator low"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="cta-button primary" onclick="scrollToWaitlist()">Join the Waitlist</button>
+                <p class="hero-secondary">For the 73% who wing it with deadlines</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Recognition Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">sound familiar?</h2>
+            <div class="pain-points">
+                <div class="pain-card">
+                    <h3>"too far gone"</h3>
+                    <p>You checked the calendar. Downloaded anyway. Now drowning in ARCs with no clear path forward.</p>
+                </div>
+                <div class="pain-card">
+                    <h3>"widget anxiety"</h3>
+                    <p>Every NetGalley approval feels like a commitment you might not keep. Your ratio haunts you.</p>
+                </div>
+                <div class="pain-card">
+                    <h3>"professional worry"</h3>
+                    <p>Publishers and authors deserve better. You want to maintain relationships but keep missing deadlines.</p>
+                </div>
+            </div>
+            <p class="validation-text">You're not alone. Our community told us the same thing.</p>
+        </div>
+    </section>
+
+    <!-- Solution Preview Section -->
+    <section class="solution-section">
+        <div class="container">
+            <h2 class="section-title">reality checks, not more tracking</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📋</div>
+                    <h3>Know what's actually possible</h3>
+                    <p>See instantly which books you can finish at your reading speed. No math required.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <h3>Should I accept this ARC?</h3>
+                    <p>Clear yes/no guidance before you download. Based on your actual capacity.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📅</div>
+                    <h3>Maintain publisher relationships</h3>
+                    <p>Know when to email teams proactively. Export deadlines to your calendar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">simple by design</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Add your books</h3>
+                    <p>Title, pages, deadline. That's it.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>See your reality</h3>
+                    <p>Books sort automatically by what's possible.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Update progress</h3>
+                    <p>Quick daily check-ins recalculate everything.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Make confident decisions</h3>
+                    <p>Clear guidance on new ARCs and priorities.</p>
+                </div>
+            </div>
+            <p class="emphasis-text">Works alongside your spreadsheets. Not a replacement.</p>
+        </div>
+    </section>
+
+    <!-- Beta Access Section -->
+    <section class="beta-access" id="waitlist">
+        <div class="container">
+            <div class="waitlist-content">
+                <h2>Join 150+ readers on the waitlist</h2>
+                <p class="beta-subtext">First 50 users get founder pricing: $7/month forever</p>
+                
+                <form class="waitlist-form" id="waitlistForm">
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="challenge" name="challenge" placeholder="Biggest deadline challenge (optional)" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <select id="books" name="books">
+                            <option value="">How many books are you juggling? (optional)</option>
+                            <option value="5-10">5-10 books</option>
+                            <option value="11-20">11-20 books</option>
+                            <option value="20+">20+ books</option>
+                            <option value="too-many">Too many to count</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="cta-button primary">Save My Spot</button>
+                </form>
+                
+                <div class="form-success" id="formSuccess" style="display: none;">
+                    <h3>You're on the list!</h3>
+                    <p>We'll email you October 1st with your exclusive access link.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Building Section -->
+    <section class="trust-section">
+        <div class="container">
+            <h2 class="section-title">built by readers, for readers</h2>
+            <div class="trust-elements">
+                <div class="trust-item">
+                    <h3>Creator Story</h3>
+                    <p>Created by Read Receipts after hearing 'I'm too far gone' from dozens of ARC reviewers in our community.</p>
+                </div>
+                <div class="trust-item">
+                    <h3>Community Validation</h3>
+                    <ul>
+                        <li>73% of readers 'wing it' with deadlines</li>
+                        <li>Validated with 100+ overwhelmed reviewers</li>
+                        <li>Built from real community feedback</li>
+                    </ul>
+                </div>
+                <div class="trust-item">
+                    <h3>Our Promise</h3>
+                    <p>No shame. No judgment. Just reality checks that help you be the reviewer you want to be.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">quick answers</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How is this different from a spreadsheet?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ShelfControl automatically calculates what's possible based on your reading speed and available time. No manual math or constant updating required.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What if I fall behind?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The app recalculates your priorities in real-time. It shows you exactly which books are still possible and suggests when to reach out to publishers proactively.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Will this fix my NetGalley ratio?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ShelfControl helps you make better decisions about which ARCs to accept, so you can actually finish them. This naturally improves your ratio over time.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Can I use this for library books too?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! ShelfControl works for any book with a deadline - ARCs, library loans, book club selections, or personal reading goals.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        When do I get access?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We're launching October 1st, 2025. Waitlist members will receive exclusive early access and founder pricing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to stop drowning?</h2>
+            <p class="cta-subtext">Join 150+ readers taking back control</p>
+            <button class="cta-button primary" onclick="scrollToWaitlist()">Join the Waitlist</button>
+            <p class="reassurance-text">No spam. Just one email when we launch October 1st.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
+                <a href="mailto:hello@shelfcontrol.app">Contact</a>
+                <a href="https://instagram.com/readreceipts" target="_blank">@readreceipts</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>
