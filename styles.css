@@ -2,6 +2,9 @@
 :root {
     --navy: #2B3D4F;
     --blush: #E8C2B9;
+    --peach: #E8C2B9;
+    --lavender: #B8A9D9;
+    --dark-purple: #4b2e83;
     --cream: #F5F1EA;
     --gold: #D4A574;
     --white: #FFFFFF;
@@ -111,8 +114,8 @@ p {
 }
 
 .nav-cta {
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--dark-purple);
+    color: var(--white);
     border: none;
     padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--border-radius);
@@ -129,7 +132,7 @@ p {
 /* Hero Section */
 .hero {
     padding: calc(80px + var(--spacing-4xl)) 0 var(--spacing-4xl);
-    background: linear-gradient(135deg, var(--blush) 0%, var(--cream) 100%);
+    background: linear-gradient(0deg, var(--lavender) 0%, var(--cream) 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -165,8 +168,8 @@ p {
 }
 
 .cta-primary {
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--dark-purple);
+    color: var(--white);
     border: none;
     padding: var(--spacing-md) var(--spacing-xl);
     font-size: var(--font-size-lg);
@@ -244,7 +247,7 @@ p {
 }
 
 .pain-card:hover {
-    border-color: var(--blush);
+    border-color: var(--lavender);
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
 }
@@ -290,7 +293,7 @@ p {
     width: 60px;
     height: 60px;
     margin: 0 auto var(--spacing-lg);
-    background: var(--gold);
+    background: var(--dark-purple);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -305,7 +308,7 @@ p {
 .feature-icon svg {
     width: 30px;
     height: 30px;
-    color: var(--navy);
+    color: var(--white);
 }
 
 .feature-title {
@@ -342,8 +345,8 @@ p {
 .step-number {
     width: 50px;
     height: 50px;
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--dark-purple);
+    color: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -378,7 +381,7 @@ p {
 /* Waitlist Section */
 .waitlist-section {
     padding: var(--spacing-4xl) 0;
-    background: linear-gradient(135deg, var(--blush) 0%, var(--cream) 100%);
+    background: linear-gradient(0deg, var(--lavender) 0%, var(--cream) 100%);
 }
 
 .waitlist-content {
@@ -422,14 +425,10 @@ p {
     border-color: var(--gold);
 }
 
-.optional-fields {
-    margin-top: var(--spacing-lg);
-}
-
 .form-submit {
     width: 100%;
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--dark-purple);
+    color: var(--white);
     border: none;
     padding: var(--spacing-md);
     font-size: var(--font-size-lg);
@@ -569,7 +568,8 @@ p {
 }
 
 .faq-answer p {
-    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    padding: var(--spacing-md);
+    padding-bottom: 0;
     color: var(--gray-medium);
     line-height: 1.7;
 }
@@ -577,7 +577,7 @@ p {
 /* Final CTA Section */
 .final-cta {
     padding: var(--spacing-4xl) 0;
-    background: var(--navy);
+    background: var(--peach);
     text-align: center;
 }
 
@@ -587,30 +587,30 @@ p {
 }
 
 .final-cta-header {
-    color: var(--white);
+    color: var(--navy);
     margin-bottom: var(--spacing-md);
 }
 
 .final-cta-subtext {
-    color: var(--cream);
+    color: var(--navy);
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-xl);
 }
 
 .final-cta-button {
-    background: var(--gold);
+    background: var(--dark-purple);
     margin-bottom: var(--spacing-md);
 }
 
 .final-cta-reassurance {
-    color: var(--cream);
+    color: var(--navy);
     font-size: var(--font-size-sm);
 }
 
 /* Footer */
 .footer {
     padding: var(--spacing-xl) 0;
-    background: var(--navy);
+    background: var(--peach);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -621,7 +621,7 @@ p {
 .footer-logo {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--white);
+    color: var(--navy);
     margin-bottom: var(--spacing-lg);
 }
 
@@ -634,7 +634,7 @@ p {
 }
 
 .footer-link {
-    color: var(--cream);
+    color: var(--navy);
     text-decoration: none;
     transition: var(--transition);
 }
@@ -644,7 +644,7 @@ p {
 }
 
 .footer-copyright {
-    color: var(--cream);
+    color: var(--navy);
     font-size: var(--font-size-sm);
 }
 

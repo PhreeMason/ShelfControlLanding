@@ -186,11 +186,6 @@ function handleFormSubmission() {
     });
 }
 
-// Simulate API call
-function simulateAPICall() {
-    return new Promise(resolve => setTimeout(resolve, 1000));
-}
-
 // Track conversion (placeholder for analytics)
 function trackConversion(email) {
     console.log('Conversion tracked:', email);
@@ -198,35 +193,6 @@ function trackConversion(email) {
     // e.g., gtag('event', 'sign_up', { method: 'waitlist' });
 }
 
-// Parallax effect for hero section (disabled to fix floating issue)
-function initParallaxEffect() {
-    // Disabled parallax to prevent section overlap issues
-    return;
-    
-    // const hero = document.querySelector('.hero');
-    // const mockup = document.querySelector('.mockup-container');
-    
-    // if (!hero || !mockup) return;
-    
-    // let ticking = false;
-    
-    // function updateParallax() {
-    //     const scrolled = window.pageYOffset;
-    //     const speed = 0.5;
-        
-    //     hero.style.transform = `translateY(${scrolled * speed * 0.3}px)`;
-    //     mockup.style.transform = `translateY(${scrolled * speed * -0.2}px)`;
-        
-    //     ticking = false;
-    // }
-    
-    // window.addEventListener('scroll', () => {
-    //     if (!ticking) {
-    //         window.requestAnimationFrame(updateParallax);
-    //         ticking = true;
-    //     }
-    // });
-}
 
 // Animate elements on page load
 function animateOnLoad() {
@@ -259,11 +225,7 @@ style.textContent = `
     }
     
     .form-input:invalid {
-        border-color: #f44336;
-    }
-    
-    .form-input:valid {
-        border-color: #4CAF50;
+        border-color: #7251b5;
     }
 `;
 document.head.appendChild(style);
