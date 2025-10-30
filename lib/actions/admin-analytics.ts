@@ -63,7 +63,6 @@ export async function getActivityTypesBreakdown(
   const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching activity types:", error);
     return [];
   }
 
@@ -99,7 +98,6 @@ export async function getSearchAnalytics(
   const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching search analytics:", error);
     return {
       total_searches: 0,
       popular_queries: [],
@@ -157,7 +155,6 @@ export async function getDeadlineStats(
   const { data: deadlines, error: deadlinesError } = await deadlinesQuery;
 
   if (deadlinesError) {
-    console.error("Error fetching deadlines:", deadlinesError);
     return {
       status_breakdown: [],
       deadlines_by_date: [],
@@ -165,14 +162,21 @@ export async function getDeadlineStats(
     };
   }
 
-  const { data: statuses, error: statusesError } = await supabase
+  const deadlineIds = deadlines.map(d => d.id);
+
+  if (deadlineIds.length === 0) {
+    return {
+      status_breakdown: [],
+      deadlines_by_date: [],
+      total_deadlines: 0,
+    };
+  }
+
+  const { data: statuses } = await supabase
     .from("deadline_status")
     .select("deadline_id, status, updated_at")
+    .in("deadline_id", deadlineIds)
     .order("updated_at", { ascending: false });
-
-  if (statusesError) {
-    console.error("Error fetching deadline statuses:", statusesError);
-  }
 
   const latestStatusByDeadline = new Map<string, string>();
 
@@ -222,7 +226,6 @@ export async function getAllUsers(): Promise<UserInfo[]> {
     .order("email", { ascending: true });
 
   if (error) {
-    console.error("Error fetching users:", error);
     return [];
   }
 
@@ -246,7 +249,6 @@ export async function getDeadlinesOverTime(
   const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching deadlines over time:", error);
     return [];
   }
 
@@ -303,16 +305,19 @@ interface DeadlineProgressQueryResult {
   };
 }
 
-export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promise<ProgressOverTimeData> {
+export async function getProgressOverTime(
+  timezoneOffsetMinutes?: number,
+  days: number = 30
+): Promise<ProgressOverTimeData> {
   const supabase = createAdminClient();
 
   const offsetMinutes = timezoneOffsetMinutes ?? 0;
 
   const nowLocal = new Date(Date.now() - offsetMinutes * 60 * 1000);
-  const thirtyDaysAgo = new Date(nowLocal);
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  thirtyDaysAgo.setHours(0, 0, 0, 0);
-  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString();
+  const daysAgo = new Date(nowLocal);
+  daysAgo.setDate(daysAgo.getDate() - days);
+  daysAgo.setHours(0, 0, 0, 0);
+  const daysAgoStr = daysAgo.toISOString();
 
   const { data, error } = await supabase
     .from("deadline_progress")
@@ -325,13 +330,12 @@ export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promi
       deadlines!inner(user_id, profiles!inner(username, email, first_name, last_name))
     `
     )
-    .gte("created_at", thirtyDaysAgoStr)
+    .gte("created_at", daysAgoStr)
     .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`)
     .order("deadline_id")
     .order("created_at");
 
   if (error) {
-    console.error("Error fetching progress over time:", error);
     return { dates: [], datasets: [] };
   }
 
@@ -355,11 +359,11 @@ export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promi
     };
   });
 
-  const last30Dates: string[] = [];
-  for (let i = 29; i >= 0; i--) {
+  const dateRange: string[] = [];
+  for (let i = days - 1; i >= 0; i--) {
     const date = new Date(Date.now() - offsetMinutes * 60 * 1000);
     date.setDate(date.getDate() - i);
-    last30Dates.push(date.toISOString().split("T")[0]);
+    dateRange.push(date.toISOString().split("T")[0]);
   }
 
   const deadlineMaxByDate = new Map<string, Map<string, number>>();
@@ -415,6 +419,7 @@ export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promi
 
         if (!isIgnored) {
           const pagesRead = currentProgress - previousProgress;
+
           const userDateMap = userPagesPerDay.get(userId)!;
           const currentTotal = userDateMap.get(date) || 0;
           userDateMap.set(date, currentTotal + pagesRead);
@@ -439,7 +444,7 @@ export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promi
   const datasets = Array.from(userPagesPerDay.entries()).map(
     ([userId, dateMap], index) => {
       const color = colors[index % colors.length];
-      const data = last30Dates.map((date) => dateMap.get(date) || 0);
+      const data = dateRange.map((date) => dateMap.get(date) || 0);
       const userInfo = userInfoMap.get(userId);
       const label = userInfo ? formatUserName(userInfo) : `User ${userId.slice(0, 8)}`;
 
@@ -453,7 +458,7 @@ export async function getProgressOverTime(timezoneOffsetMinutes?: number): Promi
     }
   );
 
-  const formattedDates = last30Dates.map((date) => {
+  const formattedDates = dateRange.map((date) => {
     const [, month, day] = date.split("-");
     return `${parseInt(month)}/${parseInt(day)}`;
   });

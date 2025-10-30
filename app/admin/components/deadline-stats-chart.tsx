@@ -33,10 +33,7 @@ export function DeadlineStatsChart() {
     queryFn: () => getDeadlineStats(selectedUserIds.length > 0 ? selectedUserIds : undefined),
   });
 
-  if (!data) {
-    return null;
-  }
-  const chartData = {
+  const chartData = data ? {
     labels: data.status_breakdown.map((item) => item.status),
     datasets: [
       {
@@ -61,7 +58,7 @@ export function DeadlineStatsChart() {
         borderWidth: 1,
       },
     ],
-  };
+  } : { labels: [], datasets: [] };
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
@@ -72,7 +69,7 @@ export function DeadlineStatsChart() {
       },
       title: {
         display: true,
-        text: `Deadline Status Distribution (Total: ${data.total_deadlines})`,
+        text: `Deadline Status Distribution${data ? ` (Total: ${data.total_deadlines})` : ''}`,
       },
     },
     scales: {
@@ -109,7 +106,7 @@ export function DeadlineStatsChart() {
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
         </div>
-      ) : data.status_breakdown.length === 0 ? (
+      ) : !data || data.status_breakdown.length === 0 ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           No deadline data available
         </div>
