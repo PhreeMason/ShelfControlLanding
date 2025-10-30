@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="w-full py-12 bg-pink-100">
@@ -19,6 +21,18 @@ export function Footer() {
             >
               @instabookology
             </a>
+            <Link
+              href="/terms"
+              className="text-slate-700 hover:text-slate-900 transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy-policy"
+              className="text-slate-700 hover:text-slate-900 transition-colors"
+            >
+              Privacy Policy
+            </Link>
           </div>
           <p className="text-sm text-slate-600 text-center">
             © 2025 ShelfControl. Built with love by @instabookology.
