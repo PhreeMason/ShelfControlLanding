@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Hero() {
   return (
-    <section className="w-full bg-gradient-to-b from-violet-50 to-white py-16 md:py-24">
+    <section className="w-full bg-gradient-to-b from-white to-violet-200 py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
           <div className="space-y-6">
@@ -20,12 +20,9 @@ export function Hero() {
                 Join the Waitlist
               </a>
             </div>
-            <p className="text-sm italic text-slate-500">
-              For those who wing it with deadlines
-            </p>
           </div>
           <div className="flex justify-center lg:justify-end">
-            <div className="relative">
+            <div className="relative z-30">
               <Image
                 src="/screenshot.png"
                 alt="ShelfControl app showing reading goals and active deadlines"

@@ -181,6 +181,54 @@ export default function TermsPage() {
           <p>These terms and conditions are effective as of 2025-10-30</p>
 
           <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+            Email Communications
+          </h2>
+
+          <p>
+            ShelfControl uses Resend for transactional email communications,
+            including but not limited to account verification, password resets,
+            and service notifications. By using ShelfControl, you acknowledge
+            and agree that:
+          </p>
+
+          <ul>
+            <li>
+              Your email address will be processed by Resend in accordance with
+              their{" "}
+              <a
+                href="https://resend.com/legal/terms-of-service"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-violet-700 hover:text-violet-800"
+              >
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://resend.com/legal/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-violet-700 hover:text-violet-800"
+              >
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              Email communications are necessary for the proper functioning and
+              security of your ShelfControl account
+            </li>
+            <li>
+              You are responsible for maintaining a valid email address
+              associated with your account
+            </li>
+            <li>
+              The Service Provider is not responsible for emails that are
+              filtered as spam or not delivered due to email service provider
+              issues
+            </li>
+          </ul>
+
+          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
             Contact Us
           </h2>
 

@@ -23,17 +23,19 @@ export default function ProtectedLayout({
         </div>
 
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-          <p>
-            Powered by{" "}
-            <a
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-              target="_blank"
-              className="font-bold hover:underline"
-              rel="noreferrer"
-            >
-              Supabase
-            </a>
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <p className="text-muted-foreground">
+              © {new Date().getFullYear()} ShelfControl
+            </p>
+            <nav className="flex gap-4">
+              <Link href="/privacy-policy" className="hover:underline">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:underline">
+                Terms
+              </Link>
+            </nav>
+          </div>
           <ThemeSwitcher />
         </footer>
       </div>
