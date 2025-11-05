@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelfControl - From drowning to breathing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #2B3D4F;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            padding: 20px 0;
+            border-bottom: 1px solid #E8E8E8;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #B8A9D9;
+        }
+        
+        .nav-cta {
+            background: #B8A9D9;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .nav-cta:hover {
+            background: #A294C4;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #F5F1EA 0%, #E8E8F5 100%);
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .hero-headline {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: #2B3D4F;
+        }
+        
+        .hero-subheadline {
+            font-size: 24px;
+            color: #5A6C7D;
+            margin-bottom: 24px;
+        }
+        
+        .social-proof {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .user-count {
+            font-weight: 600;
+            color: #B8A9D9;
+        }
+        
+        .cta-primary {
+            background: #B8A9D9;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-primary:hover {
+            background: #A294C4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 169, 217, 0.3);
+        }
+        
+        .hero-visual {
+            position: relative;
+        }
+        
+        .app-screenshot-placeholder {
+            width: 100%;
+            aspect-ratio: 9/16;
+            background: linear-gradient(135deg, #B8A9D9 0%, #E8B4B8 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .placeholder-text {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* Problem Section */
+        .problem-visual {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .problem-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .problem-text h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            color: #2B3D4F;
+        }
+        
+        .problem-text p {
+            font-size: 18px;
+            color: #5A6C7D;
+        }
+        
+        .problem-illustration {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, #E8B4A0 0%, #F5F1EA 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        /* Calculator Demo */
+        .calculator-demo {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #F5F1EA 0%, #E8E8F5 100%);
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .demo-content h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        
+        .demo-content > p {
+            font-size: 18px;
+            color: #5A6C7D;
+            margin-bottom: 32px;
+        }
+        
+        .demo-calculator {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .demo-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .demo-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2B3D4F;
+        }
+        
+        .demo-input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .demo-input-group input:focus {
+            outline: none;
+            border-color: #B8A9D9;
+        }
+        
+        .demo-calculate {
+            width: 100%;
+            background: #B8A9D9;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .demo-calculate:hover {
+            background: #A294C4;
+        }
+        
+        .demo-result {
+            margin-top: 24px;
+            padding: 24px;
+            background: #F5F1EA;
+            border-radius: 12px;
+        }
+        
+        .demo-result.hidden {
+            display: none;
+        }
+        
+        .demo-number-display {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2B3D4F;
+            margin-bottom: 12px;
+        }
+        
+        .demo-number {
+            color: #B8A9D9;
+            font-size: 24px;
+        }
+        
+        .demo-color-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .demo-color-indicator.comfortable {
+            background: #B8A9D9;
+            color: white;
+        }
+        
+        .demo-color-indicator.tight {
+            background: #E8B4A0;
+            color: white;
+        }
+        
+        .demo-color-indicator.unrealistic {
+            background: #E8B4B8;
+            color: white;
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .demo-preview {
+            position: relative;
+        }
+        
+        .demo-caption {
+            text-align: center;
+            margin-top: 16px;
+            color: #5A6C7D;
+            font-size: 14px;
+        }
+        
+        .demo-cta {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 18px;
+        }
+        
+        .demo-cta a {
+            color: #B8A9D9;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        /* Features Section */
+        .features-grid {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-header {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #2B3D4F;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 32px;
+            border-radius: 16px;
+            background: #F5F1EA;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2B3D4F;
+        }
+        
+        .feature-description {
+            font-size: 16px;
+            color: #5A6C7D;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .feature-screenshot-placeholder {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #B8A9D9 0%, #E8B4B8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .feature-screenshot-placeholder .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-screenshot-placeholder .placeholder-text {
+            font-size: 12px;
+        }
+        
+        /* Comparison Table */
+        .comparison {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #F5F1EA 0%, #E8E8F5 100%);
+        }
+        
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            margin-top: 40px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .comparison-table thead {
+            background: #2B3D4F;
+            color: white;
+        }
+        
+        .comparison-table th.highlight {
+            background: #B8A9D9;
+        }
+        
+        .comparison-table tbody tr:nth-child(even) {
+            background: #F8F8F8;
+        }
+        
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .check {
+            color: #4CAF50;
+            font-size: 20px;
+        }
+        
+        .cross {
+            color: #CCC;
+            font-size: 20px;
+        }
+        
+        .partial {
+            color: #FFA726;
+            font-size: 20px;
+        }
+        
+        .check.highlight {
+            color: #B8A9D9;
+            font-weight: 700;
+        }
+        
+        /* FAQ Section */
+        .faq {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #E8E8E8;
+            padding: 24px 0;
+        }
+        
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B3D4F;
+            cursor: pointer;
+            text-align: left;
+            padding: 0;
+        }
+        
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            margin-top: 16px;
+        }
+        
+        .faq-answer p {
+            color: #5A6C7D;
+            line-height: 1.8;
+        }
+        
+        /* Testimonials */
+        .testimonials-carousel {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #F5F1EA 0%, #E8E8F5 100%);
+        }
+        
+        .carousel-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        
+        .testimonial-slide {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 48px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-slide.active {
+            display: block;
+        }
+        
+        .testimonial-avatar {
+            margin: 0 auto 24px;
+        }
+        
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #B8A9D9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto;
+        }
+        
+        .testimonial-slide blockquote {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2B3D4F;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        
+        .testimonial-name {
+            font-weight: 600;
+            color: #B8A9D9;
+            margin-bottom: 12px;
+        }
+        
+        .testimonial-context {
+            color: #5A6C7D;
+            line-height: 1.8;
+        }
+        
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .carousel-prev,
+        .carousel-next {
+            background: #B8A9D9;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .carousel-prev:hover,
+        .carousel-next:hover {
+            background: #A294C4;
+        }
+        
+        .carousel-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #CCC;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .dot.active {
+            background: #B8A9D9;
+        }
+        
+        /* Setup Section */
+        .setup-visual {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .setup-animation-container {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        
+        .setup-video-placeholder {
+            width: 100%;
+            aspect-ratio: 9/16;
+            background: linear-gradient(135deg, #B8A9D9 0%, #E8B4B8 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+        
+        .setup-steps-visual {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        
+        .step-indicator {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #E8E8E8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2B3D4F;
+            margin: 0 auto 12px;
+        }
+        
+        .step-indicator.active .step-number {
+            background: #B8A9D9;
+            color: white;
+        }
+        
+        .step-indicator p {
+            font-size: 14px;
+            color: #5A6C7D;
+        }
+        
+        .setup-cta {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 18px;
+            color: #5A6C7D;
+        }
+        
+        /* Waitlist Section */
+        .waitlist-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #B8A9D9 0%, #E8B4B8 100%);
+            color: white;
+        }
+        
+        .waitlist-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .waitlist-header {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        
+        .waitlist-subtext {
+            font-size: 18px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+        
+        .waitlist-form {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #B8A9D9;
+        }
+        
+        .optional-fields {
+            margin: 16px 0;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            background: white;
+        }
+        
+        .form-submit {
+            width: 100%;
+            background: #B8A9D9;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .form-submit:hover {
+            background: #A294C4;
+        }
+        
+        .form-success {
+            display: none;
+            background: white;
+            color: #2B3D4F;
+            padding: 32px;
+            border-radius: 16px;
+            margin-top: 24px;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 60px 0;
+            background: #2B3D4F;
+            color: white;
+        }
+        
+        .footer-heading {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .footer-about p {
+            margin-bottom: 16px;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            margin: 32px 0;
+        }
+        
+        .footer-link {
+            color: #B8A9D9;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-link:hover {
+            opacity: 0.8;
+        }
+        
+        .footer-copyright {
+            opacity: 0.6;
+            font-size: 14px;
+        }
+        
+        /* Mobile Sticky CTA */
+        @media (max-width: 768px) {
+            .mobile-cta-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 12px 16px;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                z-index: 1000;
+            }
+            
+            .mobile-cta {
+                width: 100%;
+                background: #B8A9D9;
+                color: white;
+                border: none;
+                padding: 14px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            
+            .hero-content,
+            .problem-content,
+            .demo-container,
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-headline {
+                font-size: 32px;
+            }
+            
+            .hero-subheadline {
+                font-size: 18px;
+            }
+            
+            .section-header {
+                font-size: 28px;
+            }
+            
+            .setup-steps-visual {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">ShelfControl</div>
+                <button class="nav-cta">Join Waitlist</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-headline">From drowning to breathing.</h1>
+                    <p class="hero-subheadline">Know which ARCs you can actually finish.</p>
+                    <div class="social-proof">
+                        <span class="user-count">150+ ARC reviewers tracking deadlines</span>
+                    </div>
+                    <button class="cta-primary">Get Early Access</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="app-screenshot-placeholder">
+                        <div class="placeholder-icon">📱</div>
+                        <div class="placeholder-text">
+                            <strong>HERO SCREENSHOT</strong><br><br>
+                            Full app dashboard showing:<br>
+                            • 5-8 books with visible pages-per-day<br>
+                            • Color indicators (lavender, peach, rose)<br>
+                            • Calendar glimpse in background<br>
+                            • High resolution, occupies 60% of hero<br>
+                            • Shows realistic ARC load
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-visual">
+        <div class="container">
+            <div class="problem-content">
+                <div class="problem-text">
+                    <h2>You're drowning in ARCs.</h2>
+                    <p>Spreadsheets show what's due. ShelfControl shows what's possible at your reading speed.</p>
+                </div>
+                <div class="problem-illustration">
+                    <div class="placeholder-text" style="color: white;">
+                        <strong style="font-size: 24px;">ILLUSTRATION</strong><br><br>
+                        Overwhelmed reader surrounded by<br>
+                        book stacks with floating calendar<br>
+                        icons and question marks<br><br>
+                        Style: Friendly, not stressful<br>
+                        Colors: Lavender/peach palette<br>
+                        Shows relatability without anxiety
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Calculator Demo -->
+    <section class="calculator-demo">
+        <div class="container">
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h2>See How It Works</h2>
+                    <p>Try the calculator that's helping 150+ ARC reviewers</p>
+                    
+                    <div class="demo-calculator">
+                        <div class="demo-input-group">
+                            <label>Book pages</label>
+                            <input type="number" id="demo-pages" placeholder="e.g., 384" min="1">
+                        </div>
+                        
+                        <div class="demo-input-group">
+                            <label>Days until deadline</label>
+                            <input type="number" id="demo-days" placeholder="e.g., 14" min="1">
+                        </div>
+                        
+                        <button class="demo-calculate" onclick="calculateDemo()">Calculate</button>
+                        
+                        <div class="demo-result hidden">
+                            <p class="demo-number-display">You'd need to read <span class="demo-number">47</span> pages per day</p>
+                            <div class="demo-color-indicator comfortable">
+                                <span class="indicator-dot"></span>
+                                <span>Comfortable pace at your reading speed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-preview">
+                    <div class="app-screenshot-placeholder">
+                        <div class="placeholder-icon">🧮</div>
+                        <div class="placeholder-text">
+                            <strong>CALCULATOR SCREENSHOT</strong><br><br>
+                            Book detail view showing:<br>
+                            • Pages-per-day calculation<br>
+                            • Color indicator matching demo<br>
+                            • How this appears in app context<br>
+                            • Must match demo styling
+                        </div>
+                    </div>
+                    <p class="demo-caption">This is what you'll see for every ARC</p>
+                </div>
+            </div>
+            
+            <p class="demo-cta">Want this for all your ARCs? <a href="#waitlist">Join the waitlist</a></p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-grid">
+        <div class="container">
+            <h2 class="section-header">ShelfControl Gives You Instant Answers</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Pages-per-day on every book</h3>
+                    <p class="feature-description">Color-coded for comfortable, tight, or unrealistic pacing. Know immediately what's sustainable.</p>
+                    <div class="feature-screenshot-placeholder">
+                        <div class="placeholder-icon">📱</div>
+                        <div class="placeholder-text">
+                            <strong>FEATURE 1 SCREENSHOT</strong><br><br>
+                            Book list view showing:<br>
+                            • Pages-per-day numbers visible<br>
+                            • Color indicators clear<br>
+                            • 3+ books with different states<br>
+                            • Circle/arrow highlighting calculation
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Widget decision helper</h3>
+                    <p class="feature-description">See how many pages per day a new ARC adds before accepting. Decide based on actual capacity.</p>
+                    <div class="feature-screenshot-placeholder">
+                        <div class="placeholder-icon">📱</div>
+                        <div class="placeholder-text">
+                            <strong>FEATURE 2 SCREENSHOT</strong><br><br>
+                            "Add Book" flow showing:<br>
+                            • "This adds X pages/day" preview<br>
+                            • Accept/Decline interface<br>
+                            • Current book load visible<br>
+                            • Decision context clear
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3 class="feature-title">Calendar view</h3>
+                    <p class="feature-description">Visual planning for deadline clustering. Start books early when needed.</p>
+                    <div class="feature-screenshot-placeholder">
+                        <div class="placeholder-icon">📱</div>
+                        <div class="placeholder-text">
+                            <strong>FEATURE 3 SCREENSHOT</strong><br><br>
+                            Month calendar showing:<br>
+                            • Multiple deadline dates<br>
+                            • Visual clustering example<br>
+                            • Color-coded by status<br>
+                            • Books on deadline dates
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="container">
+            <h2 class="section-header">What Makes ShelfControl Different</h2>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Spreadsheets</th>
+                            <th>Notes Apps</th>
+                            <th class="highlight">ShelfControl</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Shows what's due</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check highlight">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Shows what's possible</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check highlight">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Widget decision help</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check highlight">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Learns your reading speed</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check highlight">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Mobile-optimized</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="partial">~</span></td>
+                            <td><span class="check highlight">✓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-header">Quick Answers</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How does ShelfControl know my reading speed?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Learns from your logged sessions. More you log, more accurate it gets.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How does the daily reading goal work across multiple books?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Your daily goal is total pages-per-day across all books. Books you log need fewer pages tomorrow; books with no progress need more pages.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What if I'm already behind on a deadline?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ShelfControl recalculates based on remaining time. You'll see immediately if it's still possible at a sustainable pace.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Will this help improve my NetGalley ratio?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ShelfControl helps you see what you can realistically handle before accepting new ARCs. When you decide based on actual capacity, you naturally finish more books on time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel -->
+    <section class="testimonials-carousel">
+        <div class="container">
+            <h2 class="section-header">What ARC Reviewers Say</h2>
+            
+            <div class="carousel-wrapper">
+                <div class="testimonial-slide active">
+                    <div class="testimonial-avatar">
+                        <div class="avatar-placeholder">C</div>
+                    </div>
+                    <blockquote>"Your app is basically better than what I have"</blockquote>
+                    <p class="testimonial-name">Caroline, ARC reviewer</p>
+                    <p class="testimonial-context">Caroline has tracked ARCs in detailed spreadsheets for years. After three weeks testing ShelfControl: "Your app tells me how many pages per day I need to read to finish on time. I haven't seen this functionality otherwise."</p>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="testimonial-avatar">
+                        <div class="avatar-placeholder">P</div>
+                    </div>
+                    <blockquote>"It's amazing to not feel like I'm drowning"</blockquote>
+                    <p class="testimonial-name">Paola, ARC reviewer</p>
+                    <p class="testimonial-context">Paola tracked everything in her notes app before ShelfControl. Three weeks in: "Honestly, I wanted to thank you for the opportunity. It's helped me knock out almost 6 ARCs now with so much time left."</p>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="testimonial-avatar">
+                        <div class="avatar-placeholder">C</div>
+                    </div>
+                    <blockquote>"It helped me for sure and I'm not into apps like this one"</blockquote>
+                    <p class="testimonial-name">C, Beta tester</p>
+                    <p class="testimonial-context">"I use it every night and make sure I update stuff. It helped me for sure and I'm not into apps like this one as much so that says something."</p>
+                </div>
+            </div>
+            
+            <div class="carousel-controls">
+                <button class="carousel-prev" onclick="changeSlide(-1)">←</button>
+                <div class="carousel-dots">
+                    <span class="dot active" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                </div>
+                <button class="carousel-next" onclick="changeSlide(1)">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Setup -->
+    <section class="setup-visual">
+        <div class="container">
+            <h2 class="section-header">Simple to Start Using</h2>
+            
+            <div class="setup-animation-container">
+                <div class="setup-video-placeholder">
+                    <div class="placeholder-icon">🎬</div>
+                    <div class="placeholder-text">
+                        <strong>SETUP WALKTHROUGH VIDEO/GIF</strong><br><br>
+                        15-20 second screen recording showing:<br>
+                        1. User typing book title → book appears (3s)<br>
+                        2. Setting deadline → pages-per-day appears (3s)<br>
+                        3. Logging pages → colors update (3s)<br>
+                        4. Calendar view shows all deadlines (3s)<br><br>
+                        Format: MP4 video or animated GIF<br>
+                        Quality: High-res actual app recording<br>
+                        File Size: Under 2MB optimized
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-steps-visual">
+                <div class="step-indicator active">
+                    <span class="step-number">1</span>
+                    <p>Search your book</p>
+                </div>
+                <div class="step-indicator">
+                    <span class="step-number">2</span>
+                    <p>Set deadline</p>
+                </div>
+                <div class="step-indicator">
+                    <span class="step-number">3</span>
+                    <p>Log pages</p>
+                </div>
+                <div class="step-indicator">
+                    <span class="step-number">4</span>
+                    <p>Everything updates</p>
+                </div>
+            </div>
+            
+            <p class="setup-cta">No complicated setup. Start tracking in under 60 seconds.</p>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section class="waitlist-section" id="waitlist">
+        <div class="container">
+            <div class="waitlist-content">
+                <h2 class="waitlist-header">Get early access when we launch</h2>
+                <p class="waitlist-subtext">One email with your access link. No spam.</p>
+                <form class="waitlist-form" id="waitlistForm">
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                    <div class="optional-fields">
+                        <input type="text" name="challenge" class="form-input optional" placeholder="Biggest deadline challenge (optional)" maxlength="100">
+                        <select name="book_count" class="form-select optional">
+                            <option value="">How many books are you juggling? (optional)</option>
+                            <option value="5-10">5-10 books</option>
+                            <option value="11-20">11-20 books</option>
+                            <option value="20+">20+ books</option>
+                            <option value="too-many">Too many to count</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="form-submit">Save My Spot</button>
+                </form>
+                <div class="form-success" id="formSuccess">
+                    <p>You're on the list! We'll email your exclusive access link when spots open up.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h3 class="footer-heading">About ShelfControl</h3>
+                <div class="footer-about">
+                    <p>Created by @instabookology, an ARC reviewer who kept accepting books without knowing what was realistic to finish.</p>
+                    <p>After months of deadline stress and publisher guilt, I built ShelfControl to answer one question: what can I actually handle?</p>
+                    <p>ARC reviewers tested it with real workloads. Their feedback shaped every feature. Built by reviewers, for reviewers.</p>
+                    <p>No shame. No judgment. Just honest answers about what's possible at your reading speed.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="mailto:hello@shelfcontrol.app" class="footer-link">Contact</a>
+                    <a href="https://instagram.com/instabookology" class="footer-link" target="_blank">@instabookology</a>
+                </div>
+                <p class="footer-copyright">© 2025 ShelfControl</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta-bar">
+        <button class="mobile-cta">Join Waitlist</button>
+    </div>
+
+    <script>
+        // Calculator Demo
+        function calculateDemo() {
+            const pages = parseInt(document.getElementById('demo-pages').value);
+            const days = parseInt(document.getElementById('demo-days').value);
+            
+            if (pages && days) {
+                const pagesPerDay = Math.ceil(pages / days);
+                const resultElement = document.querySelector('.demo-result');
+                const numberElement = document.querySelector('.demo-number');
+                const colorIndicator = document.querySelector('.demo-color-indicator');
+                
+                numberElement.textContent = pagesPerDay;
+                
+                // Assume average reading speed of 50 pages/day
+                if (pagesPerDay <= 50) {
+                    colorIndicator.className = 'demo-color-indicator comfortable';
+                    colorIndicator.querySelector('span:last-child').textContent = 'Comfortable pace at your reading speed';
+                } else if (pagesPerDay <= 75) {
+                    colorIndicator.className = 'demo-color-indicator tight';
+                    colorIndicator.querySelector('span:last-child').textContent = 'Tight but doable - extra effort needed';
+                } else {
+                    colorIndicator.className = 'demo-color-indicator unrealistic';
+                    colorIndicator.querySelector('span:last-child').textContent = 'Not possible at your current reading speed';
+                }
+                
+                resultElement.classList.remove('hidden');
+            }
+        }
+        
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+        
+        // Testimonial Carousel
+        let currentSlideIndex = 1;
+        showSlide(currentSlideIndex);
+        
+        function changeSlide(n) {
+            showSlide(currentSlideIndex += n);
+        }
+        
+        function currentSlide(n) {
+            showSlide(currentSlideIndex = n);
+        }
+        
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.testimonial-slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (n > slides.length) { currentSlideIndex = 1 }
+            if (n < 1) { currentSlideIndex = slides.length }
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[currentSlideIndex - 1].classList.add('active');
+            dots[currentSlideIndex - 1].classList.add('active');
+        }
+        
+        // Auto-rotate carousel
+        setInterval(() => {
+            changeSlide(1);
+        }, 5000);
+        
+        // Form submission
+        document.getElementById('waitlistForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.querySelector('.waitlist-form').style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

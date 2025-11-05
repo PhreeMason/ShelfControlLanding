@@ -388,4 +388,87 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+// Calculator Demo function
+function calculateDemo() {
+    const pages = parseInt(document.getElementById('demo-pages').value);
+    const deadlineDate = new Date(document.getElementById('demo-deadline').value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const daysUntil = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+
+    if (pages && daysUntil > 0) {
+        const pagesPerDay = Math.ceil(pages / daysUntil);
+        const resultElement = document.querySelector('.demo-result');
+        const numberElement = document.querySelector('.demo-number');
+        const colorIndicator = document.querySelector('.demo-color-indicator');
+
+        numberElement.textContent = pagesPerDay;
+
+        if (pagesPerDay <= 50) {
+            colorIndicator.className = 'demo-color-indicator comfortable';
+            colorIndicator.querySelector('span:last-child').textContent =
+                'Comfortable pace at your reading speed';
+        } else if (pagesPerDay <= 75) {
+            colorIndicator.className = 'demo-color-indicator tight';
+            colorIndicator.querySelector('span:last-child').textContent =
+                'Tight but doable - extra effort needed';
+        } else {
+            colorIndicator.className = 'demo-color-indicator unrealistic';
+            colorIndicator.querySelector('span:last-child').textContent =
+                'Not possible at your current reading speed';
+        }
+
+        resultElement.classList.remove('hidden');
+    }
+}
+
+// Testimonial Carousel functionality
+let currentSlideIndex = 1;
+
+function changeSlide(n) {
+    showSlide(currentSlideIndex += n);
+}
+
+function currentSlide(n) {
+    showSlide(currentSlideIndex = n);
+}
+
+function showSlide(n) {
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const dots = document.querySelectorAll('.dot');
+
+    if (n > slides.length) { currentSlideIndex = 1 }
+    if (n < 1) { currentSlideIndex = slides.length }
+
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+
+    slides[currentSlideIndex - 1].classList.add('active');
+    dots[currentSlideIndex - 1].classList.add('active');
+}
+
+// Initialize carousel on page load
+if (document.querySelector('.testimonial-slide')) {
+    showSlide(currentSlideIndex);
+
+    setInterval(() => {
+        changeSlide(1);
+    }, 30000);
+}
+
+// Mobile CTA button handler
+const mobileCta = document.querySelector('.mobile-cta');
+if (mobileCta) {
+    mobileCta.addEventListener('click', () => {
+        const waitlistSection = document.getElementById('waitlist');
+        if (waitlistSection) {
+            waitlistSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    });
+}
+
 console.log('ShelfControl Landing Page initialized successfully');
