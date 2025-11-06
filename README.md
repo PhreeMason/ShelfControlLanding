@@ -1,18 +1,4 @@
-# ShelfControl
 
-**The ARC deadline management tool for book reviewers**
-
-ShelfControl helps ARC (Advanced Review Copy) reviewers understand which books they can actually finish on time based on their real reading speed and capacity.
-
-## Features
-
-- **Pages-per-day calculations** - See exactly how many pages daily you need for each ARC
-- **Reading speed tracking** - Learn your actual reading pace from logged sessions
-- **Widget decision helper** - Preview the impact of accepting new ARCs before committing
-- **Calendar view** - Visualize deadline clustering and plan ahead
-- **Review platform tracking** - Manage which platforms need reviews for each book
-- **Progress logging** - Quick updates that recalculate remaining book pacing
-- **Book notes** - Keep review thoughts alongside deadline information
 
 ## Tech Stack
 
