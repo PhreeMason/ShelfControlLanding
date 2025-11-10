@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ShelfControl - Know which ARCs you can actually finish on time. Stop drowning in book deadlines.">
-    <meta name="keywords" content="ARC, book reviews, NetGalley, reading deadlines, book management">
+    <meta name="description" content="ShelfControl - Know which ARCs you can actually finish on time. Stop drowning in book due dates.">
+    <meta name="keywords" content="ARC, book reviews, NetGalley, reading due dates, book tracking">
     <meta property="og:title" content="ShelfControl - From drowning to breathing">
     <meta property="og:description" content="Know which ARCs you can actually finish on time. Join 150+ readers taking back control.">
     <meta property="og:type" content="website">
@@ -20,7 +20,9 @@
         <div class="container">
             <div class="nav-content">
                 <div class="logo">ShelfControl</div>
-                <button class="nav-cta">Join Waitlist</button>
+                <div class="nav-flex-container">
+                    <button class="nav-cta">get early access</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -30,51 +32,63 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-headline">From drowning to breathing.</h1>
-                    <h2 class="hero-subheadline">Know which ARCs you can actually finish.</h2>
-                    <div class="social-proof">
-                        <span class="user-count">150+ ARC reviewers tracking deadlines</span>
-                    </div>
-                    <button class="cta-primary">Get Early Access</button>
+                    <h1 class="hero-headline">requested too many arcs, now what?</h1>
+                    <h2 class="hero-subheadline">track physical, ebook, and audiobook due dates in one place</h2>
+                    <p class="hero-detail">shows which arcs you can finish on time. automatically sorts by days left. on your phone.</p>
+
+                    <button class="cta-primary">join early access</button>
+                    <p class="launch-info">early access Nov 24 • ios & android</p>
                 </div>
                 <div class="hero-visual">
-                    <div class="app-screenshot-placeholder">
-                        <div class="placeholder-icon">📱</div>
-                        <div class="placeholder-text">
-                            <strong>HERO SCREENSHOT</strong><br><br>
-                            Full app dashboard showing:<br>
-                            • 5-8 books with visible pages-per-day<br>
-                            • Color indicators (lavender, peach, rose)<br>
-                            • Calendar glimpse in background<br>
-                            • High resolution, occupies 60% of hero<br>
-                            • Shows realistic ARC load
-                        </div>
-                    </div>
+                    <img src="assets/homepage-portrait.png" alt="ShelfControl app showing book tracking with due dates and what you need per day" class="app-screenshot" loading="eager">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Problem Section -->
-    <section class="problem-visual">
+    <section class="problem-section">
         <div class="container">
-            <div class="problem-content">
+            <div class="problem-grid">
                 <div class="problem-text">
-                    <h2>You're drowning in ARCs.</h2>
-                    <p>Spreadsheets show what's due. ShelfControl shows what's possible at your reading speed.</p>
+                    <h2>juggling arcs across physical, ebook, and audio</h2>
+                    <p class="problem-impact">can't see your full arc schedule when it's scattered across reading trackers, notes, and spreadsheets.</p>
                 </div>
-                <div class="problem-illustration">
-                    <div class="placeholder-text">
-                        <strong style="font-size: 24px;">ILLUSTRATION</strong><br><br>
-                        Overwhelmed reader surrounded by<br>
-                        book stacks with floating calendar<br>
-                        icons and question marks<br><br>
-                        Style: Friendly, not stressful<br>
-                        Colors: Lavender/peach palette<br>
-                        Shows relatability without anxiety
+                <div class="problem-image">
+                    <div class="format-icons-group">
+                        <img src="assets/reading-book.png" alt="Physical book format icon" loading="lazy">
+                        <img src="assets/audiobook.png" alt="Audiobook format icon" loading="lazy">
+                        <img src="assets/ebook.png" alt="Ebook format icon" loading="lazy">
                     </div>
                 </div>
             </div>
+
+            <div class="problem-grid reverse">
+                <div class="problem-text">
+                    <h2>no idea which arc to read next when due dates overlap</h2>
+                    <p class="problem-impact">decision paralysis every time you sit down to read or listen.</p>
+                </div>
+                <div class="problem-image">
+                    <img src="assets/overlapping-deadlines.png" alt="Calendar showing multiple books due same week, overwhelmed visual" class="problem-screenshot">
+                </div>
+            </div>
+
+            <div class="problem-grid">
+                <div class="problem-text">
+                    <h2>accepting new arcs without knowing what you can handle</h2>
+                    <p class="problem-impact">that feeling when you realize you screwed yourself over.</p>
+                </div>
+                <div class="problem-image">
+                    <img src="assets/arc-overwhelm.png" alt="NetGalley notification showing ARC approval overwhelm with a growing pile of pending books" class="problem-screenshot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transition Section -->
+    <section class="transition">
+        <div class="container">
+            <h2>spreadsheets show what's due. shelfcontrol shows what's possible at your actual pace in any format.</h2>
         </div>
     </section>
 
@@ -83,105 +97,203 @@
         <div class="container">
             <div class="demo-container">
                 <div class="demo-content">
-                    <h2>See How It Works</h2>
-                    <p>Try the calculator that's helping 150+ ARC reviewers</p>
+                    <h2>try the calculator</h2>
+                    <p>see how shelfcontrol handles both formats</p>
 
-                    <div class="demo-calculator">
-                        <div class="demo-input-group">
-                            <label>Book pages</label>
-                            <input type="number" id="demo-pages" placeholder="e.g., 384" min="1">
+                    <div class="calculator-widget">
+                        <div class="format-toggle">
+                            <button class="active" onclick="switchFormat('physical', event)">Physical/Ebook</button>
+                            <button onclick="switchFormat('audio', event)">Audiobook</button>
                         </div>
 
-                        <div class="demo-input-group">
-                            <label>Deadline date</label>
-                            <input type="date" id="demo-deadline">
+                        <div id="physicalCalc">
+                            <div class="input-group">
+                                <label>book pages</label>
+                                <input type="number" value="384" id="demoPages">
+                            </div>
+                            <div class="input-group">
+                                <label>due date</label>
+                                <input type="date" id="demoDays">
+                            </div>
+                            <button class="calc-button" onclick="calculatePhysical()">calculate</button>
+
+                            <div class="calc-result">
+                                <div class="result-number" id="resultNumber">47</div>
+                                <div class="result-text">pages per day</div>
+                                <div class="pace-indicator">
+                                    <span class="pace-dot"></span>
+                                    <span id="paceText">comfortable pace</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <button class="demo-calculate" onclick="calculateDemo()">Calculate</button>
+                        <div id="audioCalc" style="display: none;">
+                            <div class="input-group">
+                                <label>listening time (hours)</label>
+                                <input type="number" value="11.5" step="0.5" id="demoHours">
+                            </div>
+                            <div class="input-group">
+                                <label>due date</label>
+                                <input type="date" id="demoAudioDays">
+                            </div>
+                            <button class="calc-button" onclick="calculateAudio()">calculate</button>
 
-                        <div class="demo-result hidden">
-                            <p class="demo-number-display">You'd need to read <span class="demo-number">47</span> pages per day</p>
-                            <div class="demo-color-indicator comfortable">
-                                <span class="indicator-dot"></span>
-                                <span>Comfortable pace at your reading speed</span>
+                            <div class="calc-result">
+                                <div class="result-number" id="resultAudioNumber">86</div>
+                                <div class="result-text">minutes per day</div>
+                                <div class="pace-indicator">
+                                    <span class="pace-dot"></span>
+                                    <span id="paceAudioText">comfortable</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="demo-preview">
-                    <div class="app-screenshot-placeholder">
-                        <div class="placeholder-icon">🧮</div>
-                        <div class="placeholder-text">
-                            <strong>CALCULATOR SCREENSHOT</strong><br><br>
-                            Book detail view showing:<br>
-                            • Pages-per-day calculation<br>
-                            • Color indicator matching demo<br>
-                            • How this appears in app context<br>
-                            • Must match demo styling
+                <div class="demo-content">
+                    <div class="book-card-container">
+                        <!-- Physical/Ebook Card -->
+                        <div class="book-card" id="physicalBookCard">
+                            <div class="book-card-inner">
+                                <div class="book-cover-placeholder" style="background: linear-gradient(135deg, #1c1650 0%, #6c0a0a 100%);">
+                                    <div class="cover-title">Oathbound</div>
+                                </div>
+
+                                <div class="book-info">
+                                    <div class="book-header">
+                                        <h3 class="book-title">Oathbound</h3>
+                                        <div class="days-badge">
+                                            <div class="days-number" id="physicalDaysNumber">14</div>
+                                            <div class="days-label">days</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="book-metric">
+                                        <span class="metric-value" id="physicalMetric">3</span> pages/day needed
+                                    </div>
+
+                                    <div class="book-due">Due: <span id="physicalDueDate">Nov 19, 2025</span></div>
+
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="physicalProgress" style="width: 78%;"></div>
+                                        </div>
+                                        <div class="progress-percent" id="physicalPercent">78%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Audiobook Card -->
+                        <div class="book-card" id="audioBookCard" style="display: none;">
+                            <div class="book-card-inner">
+                                <div class="book-cover-placeholder" style="background: linear-gradient(135deg, #e63946 0%, #1d3557 100%);">
+                                    <div class="cover-title">BLOOD<br>OVER<br>BRIGHT</div>
+                                </div>
+
+                                <div class="book-info">
+                                    <div class="book-header">
+                                        <h3 class="book-title">Blood Over Bright Haven</h3>
+                                        <div class="days-badge">
+                                            <div class="days-number" id="audioDaysNumber">25</div>
+                                            <div class="days-label">days</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="book-metric">
+                                        <span class="metric-value" id="audioMetric">19</span> minutes/day needed
+                                    </div>
+
+                                    <div class="book-due">Due: <span id="audioDueDate">Nov 30, 2025</span></div>
+
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="audioProgress" style="width: 22%;"></div>
+                                        </div>
+                                        <div class="progress-percent" id="audioPercent">22%</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <p class="demo-caption">This is what you'll see for every ARC</p>
+                    <p class="demo-explanation">this is what you see for every arc, regardless of format</p>
                 </div>
             </div>
 
-            <p class="demo-cta">Want this for all your ARCs? <a href="#waitlist">Join the waitlist</a></p>
+            <p class="demo-cta-text">want this for all your arcs? <a href="#early-access">join early access</a></p>
+        </div>
+    </section>
+
+    <!-- Full Width Screenshot Break -->
+    <section class="visual-break">
+        <div class="full-width-screenshot">
+            <div class="dashboard-screenshots-container">
+                <div class="feature-screenshot dashboard-screenshot">
+                    <img src="assets/dashboard-1.png" alt="ShelfControl dashboard showing multiple ARCs with due dates and pages per day" loading="lazy">
+                </div>
+                <div class="feature-screenshot dashboard-screenshot">
+                    <img src="assets/dashboard-2.png" alt="ShelfControl dashboard with mixed book formats and progress tracking" loading="lazy">
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features-grid">
+    <section class="features-section">
         <div class="container">
-            <h2 class="section-header">ShelfControl Gives You Instant Answers</h2>
-            <div class="features">
+            <h2 class="section-header">what beta testers loved most</h2>
+
+            <div class="features-grid-new">
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title">Pages-per-day on every book</h3>
-                    <p class="feature-description">Color-coded for comfortable, tight, or unrealistic pacing. Know immediately what's sustainable.</p>
-                    <div class="feature-screenshot-placeholder">
-                        <div class="placeholder-icon">📱</div>
-                        <div class="placeholder-text">
-                            <strong>FEATURE 1 SCREENSHOT</strong><br><br>
-                            Book list view showing:<br>
-                            • Pages-per-day numbers visible<br>
-                            • Color indicators clear<br>
-                            • 3+ books with different states<br>
-                            • Circle/arrow highlighting calculation
-                        </div>
+                    <div class="feature-screenshot" style="overflow: hidden; height: 420px; display: flex; align-items: flex-start; justify-content: center; background: #F5F1EA;">
+                        <img src="assets/all-formats-portrait.png" alt="ShelfControl dashboard showing multiple book formats including physical books, ebooks, and audiobooks with due dates" style="width: 100%; height: auto; object-fit: cover; object-position: top;" loading="lazy">
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">track physical, ebook, and audiobook arcs together</h3>
+                        <p class="feature-quote">"it's on my phone now"</p>
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">Widget decision helper</h3>
-                    <p class="feature-description">See how many pages per day a new ARC adds before accepting. Decide based on actual capacity.</p>
-                    <div class="feature-screenshot-placeholder">
-                        <div class="placeholder-icon">📱</div>
-                        <div class="placeholder-text">
-                            <strong>FEATURE 2 SCREENSHOT</strong><br><br>
-                            "Add Book" flow showing:<br>
-                            • "This adds X pages/day" preview<br>
-                            • Accept/Decline interface<br>
-                            • Current book load visible<br>
-                            • Decision context clear
-                        </div>
+                    <div class="feature-screenshot" style="display: flex; align-items: center; justify-content: center; background: #F5F1EA; padding: 20px;">
+                        <img src="assets/impact-screen-portrait.png" alt="ShelfControl impact preview screen showing how accepting a new ARC affects your reading schedule" style="max-width: 100%; height: auto;" loading="lazy">
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">see impact before accepting new arcs</h3>
+                        <p class="feature-quote">"I was so happy when I was like, oh my god, I get this"</p>
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3 class="feature-title">Calendar view</h3>
-                    <p class="feature-description">Visual planning for deadline clustering. Start books early when needed.</p>
-                    <div class="feature-screenshot-placeholder">
-                        <div class="placeholder-icon">📱</div>
-                        <div class="placeholder-text">
-                            <strong>FEATURE 3 SCREENSHOT</strong><br><br>
-                            Month calendar showing:<br>
-                            • Multiple deadline dates<br>
-                            • Visual clustering example<br>
-                            • Color-coded by status<br>
-                            • Books on deadline dates
-                        </div>
+                    <div class="feature-screenshot" style="display: flex; align-items: center; justify-content: center; background: #E8C2B9; padding: 20px;">
+                        <video autoplay loop muted playsinline style="max-width: 100%; height: auto; border-radius: 12px;">
+                            <source src="assets/calendar.mp4" type="video/mp4">
+                            Your browser doesn't support video playback.
+                        </video>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">calendar shows when your week gets crazy</h3>
+                        <p class="feature-quote">"having that actually on a calendar is really useful"</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-screenshot" style="overflow: hidden; height: 420px; display: flex; align-items: flex-start; justify-content: center; background: #F5F1EA;">
+                        <img src="assets/notes-screenshot-portrait.png" alt="ShelfControl notes screen showing hashtag organization for categorizing books and reviews" style="width: 100%; height: auto; object-fit: cover; object-position: top;" loading="lazy">
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">notes for each arc</h3>
+                        <p class="feature-quote">"keeping everything organized so much easier"</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-screenshot" style="display: flex; align-items: center; justify-content: center; background: #E8C2B9; padding: 20px;">
+                        <img src="assets/review-tracking.png" alt="ShelfControl review tracking interface showing where you posted reviews" style="max-width: 100%; height: auto;" loading="lazy">
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">track where you posted reviews</h3>
+                        <p class="feature-quote">"tremendously helpful"</p>
                     </div>
                 </div>
             </div>
@@ -191,47 +303,60 @@
     <!-- Comparison Table -->
     <section class="comparison">
         <div class="container">
-            <h2 class="section-header">What Makes ShelfControl Different</h2>
+            <h2 class="section-header">what makes shelfcontrol different</h2>
             <div class="comparison-table-wrapper">
                 <table class="comparison-table">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Spreadsheets</th>
-                            <th>Notes Apps</th>
-                            <th class="highlight">ShelfControl</th>
+                            <th>spreadsheets</th>
+                            <th>notes apps</th>
+                            <th>reading trackers</th>
+                            <th class="highlight">shelfcontrol</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Shows what's due</td>
-                            <td><span class="check">✓</span></td>
-                            <td><span class="check">✓</span></td>
-                            <td><span class="check highlight">✓</span></td>
+                            <td>shows pages/minutes per day needed</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
                         </tr>
                         <tr>
-                            <td>Shows what's possible</td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="check highlight">✓</span></td>
-                        </tr>
-                        <tr>
-                            <td>Widget decision help</td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="check highlight">✓</span></td>
-                        </tr>
-                        <tr>
-                            <td>Learns your reading speed</td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="cross">✗</span></td>
-                            <td><span class="check highlight">✓</span></td>
-                        </tr>
-                        <tr>
-                            <td>Mobile-optimized</td>
-                            <td><span class="cross">✗</span></td>
+                            <td>track when your arcs are due</td>
                             <td><span class="partial">~</span></td>
-                            <td><span class="check highlight">✓</span></td>
+                            <td><span class="partial">~</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>visual calendar of due dates</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>arc decision helper</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>tracks all formats (physical, ebook, audio)</td>
+                            <td><span class="partial">~</span></td>
+                            <td><span class="partial">~</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>quick mobile updates</td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td class="highlight-cell"><span class="check">✓</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -239,173 +364,63 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="faq">
+<!-- Testimonials -->
+ <!-- TODO add cartoon profile photos for each -->
+    <section class="testimonials">
         <div class="container">
-            <h2 class="section-header">Quick Answers</h2>
-            <div class="faq-list">
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>How does ShelfControl know my reading speed?</span>
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Learns from your logged sessions. More you log, more accurate it gets.</p>
+            <h2 class="section-header">what actually happened</h2>
+
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="tester-avatar">
+                        <img src="assets/flower1.png" alt="Tester avatar">
                     </div>
+                    <p class="testimonial-quote">"your app is basically better than what i have"</p>
+                    <p class="testimonial-context">tracked arcs in detailed spreadsheets for years. after two weeks: "your app tells me how many pages per day i need to read to finish on time. i've never seen this anywhere else."</p>
                 </div>
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>How does the daily reading goal work across multiple books?</span>
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Your daily goal is total pages-per-day across all books. Books you log need fewer pages tomorrow; books with no progress need more pages.</p>
+
+                <div class="testimonial-card">
+                    <div class="tester-avatar">
+                        <img src="assets/flowers2.png" alt="Tester avatar">
                     </div>
+                    <p class="testimonial-quote">"knocked out seven arcs in the short time span that i've had the app"</p>
+                    <p class="testimonial-context">tracked everything in notes app before shelfcontrol. two weeks in: "telling me how many pages a day i need to read is the most useful thing."</p>
                 </div>
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>What if I'm already behind on a deadline?</span>
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>ShelfControl recalculates based on remaining time. You'll see immediately if it's still possible at a sustainable pace.</p>
+
+                <div class="testimonial-card">
+                    <div class="tester-avatar">
+                        <img src="assets/cherry-blossom.png" alt="Tester avatar">
                     </div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>Will this help improve my NetGalley ratio?</span>
-                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>ShelfControl helps you see what you can realistically handle before accepting new ARCs. When you decide based on actual capacity, you naturally finish more books on time.</p>
-                    </div>
+                    <p class="testimonial-quote">"having that actually on a calendar is really useful"</p>
+                    <p class="testimonial-context">"got totally overwhelmed and kept asking for more arcs" before shelfcontrol. now: "helped me realize i was in a slump as opposed to just feeling it."</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Carousel -->
-    <section class="testimonials-carousel">
+    <!-- Beta Access / Early Access Section -->
+    <section class="early-access-section" id="early-access">
         <div class="container">
-            <h2 class="section-header">What ARC Reviewers Say</h2>
-
-            <div class="carousel-wrapper">
-                <div class="testimonial-slide active">
-                    <div class="testimonial-avatar">
-                        <div class="avatar-placeholder">C</div>
-                    </div>
-                    <blockquote>"Your app is basically better than what I have"</blockquote>
-                    <p class="testimonial-name">Caroline, ARC reviewer</p>
-                    <p class="testimonial-context">Caroline has tracked ARCs in detailed spreadsheets for years. After three weeks testing ShelfControl: "Your app tells me how many pages per day I need to read to finish on time. I haven't seen this functionality otherwise."</p>
-                </div>
-
-                <div class="testimonial-slide">
-                    <div class="testimonial-avatar">
-                        <div class="avatar-placeholder">P</div>
-                    </div>
-                    <blockquote>"It's amazing to not feel like I'm drowning"</blockquote>
-                    <p class="testimonial-name">Paola, ARC reviewer</p>
-                    <p class="testimonial-context">Paola tracked everything in her notes app before ShelfControl. Three weeks in: "Honestly, I wanted to thank you for the opportunity. It's helped me knock out almost 6 ARCs now with so much time left."</p>
-                </div>
-
-                <div class="testimonial-slide">
-                    <div class="testimonial-avatar">
-                        <div class="avatar-placeholder">C</div>
-                    </div>
-                    <blockquote>"It helped me for sure and I'm not into apps like this one"</blockquote>
-                    <p class="testimonial-name">C, Beta tester</p>
-                    <p class="testimonial-context">"I use it every night and make sure I update stuff. It helped me for sure and I'm not into apps like this one as much so that says something."</p>
-                </div>
-            </div>
-
-            <div class="carousel-controls">
-                <button class="carousel-prev" onclick="changeSlide(-1)">←</button>
-                <div class="carousel-dots">
-                    <span class="dot active" onclick="currentSlide(1)"></span>
-                    <span class="dot" onclick="currentSlide(2)"></span>
-                    <span class="dot" onclick="currentSlide(3)"></span>
-                </div>
-                <button class="carousel-next" onclick="changeSlide(1)">→</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Setup Section -->
-    <section class="setup-visual">
-        <div class="container">
-            <h2 class="section-header">Simple to Start Using</h2>
-
-            <div class="setup-animation-container">
-                <div class="setup-video-placeholder">
-                    <div class="placeholder-icon">🎬</div>
-                    <div class="placeholder-text">
-                        <strong>SETUP WALKTHROUGH VIDEO/GIF</strong><br><br>
-                        15-20 second screen recording showing:<br>
-                        1. User typing book title → book appears (3s)<br>
-                        2. Setting deadline → pages-per-day appears (3s)<br>
-                        3. Logging pages → colors update (3s)<br>
-                        4. Calendar view shows all deadlines (3s)<br><br>
-                        Format: MP4 video or animated GIF<br>
-                        Quality: High-res actual app recording<br>
-                        File Size: Under 2MB optimized
-                    </div>
-                </div>
-            </div>
-
-            <div class="setup-steps-visual">
-                <div class="step-indicator active">
-                    <span class="step-number">1</span>
-                    <p>Search your book</p>
-                </div>
-                <div class="step-indicator">
-                    <span class="step-number">2</span>
-                    <p>Set deadline</p>
-                </div>
-                <div class="step-indicator">
-                    <span class="step-number">3</span>
-                    <p>Log pages</p>
-                </div>
-                <div class="step-indicator">
-                    <span class="step-number">4</span>
-                    <p>Everything updates</p>
-                </div>
-            </div>
-
-            <p class="setup-cta">No complicated setup. Start tracking in under 60 seconds.</p>
-        </div>
-    </section>
-
-    <!-- Beta Access / Waitlist Section -->
-    <section class="waitlist-section" id="waitlist">
-        <div class="container">
-            <div class="waitlist-content">
-                <h2 class="waitlist-header">Get early access when we launch</h2>
-                <p class="waitlist-subtext">One email with your access link. No spam.</p>
-                <form class="waitlist-form" id="waitlistForm" action="https://api.web3forms.com/submit" method="POST">
+            <div class="early-access-content">
+                <h2 class="early-access-header">get early access when we launch</h2>
+                <p class="early-access-subtext">one email with your access link. no spam.</p>
+                <form class="early-access-form" id="early-accessForm" action="https://api.web3forms.com/submit" method="POST">
                     <input type="hidden" name="access_key" value="8282955d-7626-479b-a2ad-d53edc570acf">
-                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                    <input type="email" name="email" class="form-input" placeholder="enter your email" required>
+                    <select name="book_count" class="form-select optional" required>
+                        <option value="">what kind of phone do you have:</option>
+                        <option value="ios">iOS</option>
+                        <option value="android">android</option>
+                    </select>
                     <div class="optional-fields">
-                        <input type="text" name="challenge" class="form-input optional" placeholder="Biggest deadline challenge (optional)" maxlength="100">
-                        <select name="book_count" class="form-select optional">
-                            <option value="">How many books are you juggling? (optional)</option>
-                            <option value="5-10">5-10 books</option>
-                            <option value="11-20">11-20 books</option>
-                            <option value="20+">20+ books</option>
-                            <option value="too-many">Too many to count</option>
-                        </select>
+                        <input type="text" name="handle" class="form-input optional" placeholder="handle (optional)">
+                        <input type="text" name="platform" class="form-input optional" placeholder="platform (optional)">
                     </div>
-                    <button type="submit" class="form-submit">Save My Spot</button>
+                    <input type="text" name="challenge" class="challenge form-input optional" placeholder="biggest due date challenge? (optional)" maxlength="100">
+                    <button type="submit" class="form-submit">save my spot</button>
                 </form>
                 <div class="form-success" id="formSuccess">
-                    <p>You're on the list! We'll email your exclusive access link when spots open up.</p>
+                    <p>you're on the list! we'll email your exclusive access link when spots open up.</p>
                 </div>
             </div>
         </div>
@@ -415,25 +430,31 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <h3 class="footer-heading">About ShelfControl</h3>
-                <div class="footer-about">
-                    <p>Created by @instabookology, an ARC reviewer who kept accepting books without knowing what was realistic to finish.</p>
-                    <p>After months of deadline stress and publisher guilt, I built ShelfControl to answer one question: what can I actually handle?</p>
-                    <p>ARC reviewers tested it with real workloads. Their feedback shaped every feature. Built by reviewers, for reviewers.</p>
-                    <p>No shame. No judgment. Just honest answers about what's possible at your reading speed.</p>
-                </div>
+                <!-- <h3 class="footer-heading">about shelfcontrol</h3> -->
+                <!-- <div class="footer-about">
+                    <p>created by @instabookology, kept seeing "what have i done" posts after people requested too many arcs</p> -->
+                    <!-- <p>after months of "i screwed myself over" moments and publisher guilt, i built shelfcontrol to answer one question: what can i actually handle?</p>
+                    <p>arc reviewers tested it with their workloads: juggling netgalley, pr companies, direct author requests, overlapping due dates. their feedback shaped every feature.</p>
+                    <p>no shame. no judgment. just honest answers about what's possible at your reading pace.</p> -->
+                <!-- </div> -->
                 <div class="footer-links">
-                    <a href="mailto:hello@shelfcontrol.app" class="footer-link">Contact</a>
+                    <!-- <a href="mailto:hello@shelfcontrol.app" class="footer-link">contact</a> -->
                     <a href="https://instagram.com/instabookology" class="footer-link" target="_blank">@instabookology</a>
                 </div>
-                <p class="footer-copyright">© 2025 ShelfControl</p>
+                <div class="footer-attribution">
+                    <p>Icons from Flaticon:</p>
+                    <p><a href="https://www.flaticon.com/free-icons/reading" title="reading icons">Reading icons by mangsaabguru</a></p>
+                    <p><a href="https://www.flaticon.com/free-icons/ebook" title="ebook icons">Ebook icons by Freepik</a></p>
+                    <p><a href="https://www.flaticon.com/free-icons/audiobook" title="audiobook icons">Audiobook icons by nawicon</a></p>
+                </div>
+                <p class="footer-copyright">© 2025 shelfcontrol</p>
             </div>
         </div>
     </footer>
 
     <!-- Mobile Sticky CTA -->
     <div class="mobile-cta-bar">
-        <button class="mobile-cta">Join Waitlist</button>
+        <button class="mobile-cta">join early-access</button>
     </div>
 
     <script src="index.js"></script>

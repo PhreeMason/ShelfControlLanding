@@ -1,29 +1,56 @@
-// ShelfControl Landing Page JavaScript
+/**
+ * ShelfControl Landing Page JavaScript
+ * Handles interactive features, form submissions, and calculator functionality
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize animations on scroll
     initScrollAnimations();
-    
+
     // Handle navbar scroll effects
     handleNavbarScroll();
-    
+
     // Setup smooth scrolling for CTA buttons
     setupSmoothScroll();
-    
-    // Initialize FAQ accordion
-    initFAQAccordion();
-    
-    // Handle waitlist form submission
+
+    // Handle early-access form submission
     handleFormSubmission();
-    
-    // Add parallax effect to hero
-    initParallaxEffect();
-    
+
     // Animate elements on page load
     animateOnLoad();
+
+    // Set default dates for calculator inputs
+    const today = new Date();
+
+    // Set physical book due date to 14 days from today
+    const physicalDueDate = new Date(today);
+    physicalDueDate.setDate(today.getDate() + 14);
+    const physicalDateInput = document.getElementById('demoDays');
+    physicalDateInput.value = physicalDueDate.toISOString().split('T')[0];
+    physicalDateInput.min = today.toISOString().split('T')[0]; // Prevent past dates
+
+    // Set audiobook due date to 25 days from today
+    const audioDueDate = new Date(today);
+    audioDueDate.setDate(today.getDate() + 25);
+    const audioDateInput = document.getElementById('demoAudioDays');
+    audioDateInput.value = audioDueDate.toISOString().split('T')[0];
+    audioDateInput.min = today.toISOString().split('T')[0]; // Prevent past dates
+
+    // Initialize calculator with default values
+    calculatePhysical();
+    calculateAudio();
+
+    // Add event listeners for real-time updates
+    document.getElementById('demoPages').addEventListener('input', calculatePhysical);
+    document.getElementById('demoDays').addEventListener('input', calculatePhysical);
+    document.getElementById('demoHours').addEventListener('input', calculateAudio);
+    document.getElementById('demoAudioDays').addEventListener('input', calculateAudio);
 });
 
-// Intersection Observer for scroll animations
+/**
+ * Initialize scroll animations using Intersection Observer
+ * Animates elements as they enter the viewport
+ */
 function initScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
@@ -50,7 +77,10 @@ function initScrollAnimations() {
     });
 }
 
-// Navbar scroll effects
+/**
+ * Handle navbar scroll effects
+ * Shows/hides navbar on scroll and adds shadow when scrolled
+ */
 function handleNavbarScroll() {
     const navbar = document.querySelector('.navbar');
     let lastScroll = 0;
@@ -76,59 +106,42 @@ function handleNavbarScroll() {
     });
 }
 
+// Smooth scroll to early access section
+function scrollToEarlyAccess(e) {
+    if (e) e.preventDefault();
+    const earlyAccessSection = document.getElementById('early-access');
+
+    if (earlyAccessSection) {
+        earlyAccessSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        // Focus on email input after scroll
+        setTimeout(() => {
+            const emailInput = earlyAccessSection.querySelector('input[type="email"]');
+            if (emailInput) {
+                emailInput.focus();
+            }
+        }, 800);
+    }
+}
+
 // Smooth scrolling for all CTA buttons
 function setupSmoothScroll() {
     const ctaButtons = document.querySelectorAll(
-        '.nav-cta, .cta-primary, .final-cta-button'
+        '.nav-cta, .cta-primary, .final-cta-button, .mobile-cta'
     );
-    
+
     ctaButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const waitlistSection = document.querySelector('.waitlist-section');
-            
-            if (waitlistSection) {
-                waitlistSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-                
-                // Focus on email input after scroll
-                setTimeout(() => {
-                    const emailInput = waitlistSection.querySelector('input[type="email"]');
-                    if (emailInput) {
-                        emailInput.focus();
-                    }
-                }, 800);
-            }
-        });
+        button.addEventListener('click', scrollToEarlyAccess);
     });
 }
 
-// FAQ Accordion functionality
-function initFAQAccordion() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            // Close other items
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item && otherItem.classList.contains('active')) {
-                    otherItem.classList.remove('active');
-                }
-            });
-            
-            // Toggle current item
-            item.classList.toggle('active');
-        });
-    });
-}
 
 // Form submission handling
 function handleFormSubmission() {
-    const form = document.getElementById('waitlistForm');
+    const form = document.getElementById('early-accessForm');
     const successMessage = document.getElementById('formSuccess');
     
     if (!form) return;
@@ -188,9 +201,8 @@ function handleFormSubmission() {
 
 // Track conversion (placeholder for analytics)
 function trackConversion(email) {
-    console.log('Conversion tracked:', email);
     // Add your analytics tracking code here
-    // e.g., gtag('event', 'sign_up', { method: 'waitlist' });
+    // e.g., gtag('event', 'sign_up', { method: 'early-access' });
 }
 
 
@@ -230,17 +242,27 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Email validation
+// Email validation with visual feedback
 const emailInput = document.querySelector('input[type="email"]');
 if (emailInput) {
     emailInput.addEventListener('input', (e) => {
-        const email = e.target.value;
+        const email = e.target.value.trim();
         const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        
+
         if (email.length > 0) {
             e.target.style.borderColor = isValid ? '#4CAF50' : '#f44336';
         } else {
             e.target.style.borderColor = '';
+        }
+    });
+
+    // Validate on blur
+    emailInput.addEventListener('blur', (e) => {
+        const email = e.target.value.trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            e.target.setCustomValidity('Please enter a valid email address');
+        } else {
+            e.target.setCustomValidity('');
         }
     });
 }
@@ -257,42 +279,6 @@ painCards.forEach(card => {
     });
 });
 
-// Counter animation for stats
-function animateCounter(element, target, duration = 2000) {
-    const start = 0;
-    const increment = target / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(current);
-    }, 16);
-}
-
-// Observe and animate stats when visible
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const stats = entry.target.querySelectorAll('.stat-number');
-            stats.forEach(stat => {
-                const target = parseInt(stat.getAttribute('data-target'));
-                if (target) {
-                    animateCounter(stat, target);
-                }
-            });
-            statsObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
-
-const trustSection = document.querySelector('.trust');
-if (trustSection) {
-    statsObserver.observe(trustSection);
-}
 
 // Lazy load images
 const lazyImages = document.querySelectorAll('img[data-src]');
@@ -326,14 +312,6 @@ if ('PerformanceObserver' in window) {
 
 // Accessibility improvements
 document.addEventListener('keydown', (e) => {
-    // Add keyboard navigation for FAQ
-    if (e.key === 'Enter' || e.key === ' ') {
-        if (e.target.classList.contains('faq-question')) {
-            e.preventDefault();
-            e.target.click();
-        }
-    }
-    
     // Skip to main content
     if (e.key === 'Tab' && e.shiftKey === false && document.activeElement === document.body) {
         const mainContent = document.querySelector('.hero');
@@ -388,6 +366,28 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+// Date Calculation Helper
+function calculateDaysUntil(dateString) {
+    if (!dateString) return 1; // Default to 1 day if no date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = new Date(dateString);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // If date is in the past, return 0 to indicate overdue
+    if (diffDays < 0) return 0;
+    return Math.max(1, diffDays); // Minimum 1 day for future dates
+}
+
+// Format Date for Display (e.g., "Nov 19, 2025")
+function formatDateForDisplay(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 // Calculator Demo function
 function calculateDemo() {
     const pages = parseInt(document.getElementById('demo-pages').value);
@@ -423,52 +423,113 @@ function calculateDemo() {
     }
 }
 
-// Testimonial Carousel functionality
-let currentSlideIndex = 1;
+/**
+ * Toggle between physical/ebook and audiobook calculator formats
+ * @param {string} format - Either 'physical' or 'audio'
+ * @param {Event} evt - Click event object
+ */
+function switchFormat(format, evt) {
+    const buttons = document.querySelectorAll('.format-toggle button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if (evt && evt.target) {
+        evt.target.classList.add('active');
+    }
 
-function changeSlide(n) {
-    showSlide(currentSlideIndex += n);
+    if (format === 'physical') {
+        document.getElementById('physicalCalc').style.display = 'block';
+        document.getElementById('audioCalc').style.display = 'none';
+        // Show physical book card
+        document.getElementById('physicalBookCard').style.display = 'block';
+        document.getElementById('audioBookCard').style.display = 'none';
+    } else {
+        document.getElementById('physicalCalc').style.display = 'none';
+        document.getElementById('audioCalc').style.display = 'block';
+        // Show audiobook card
+        document.getElementById('physicalBookCard').style.display = 'none';
+        document.getElementById('audioBookCard').style.display = 'block';
+    }
 }
 
-function currentSlide(n) {
-    showSlide(currentSlideIndex = n);
+/**
+ * Determine pace indicator styling based on value and thresholds
+ * @param {number} value - Pages per day or minutes per day
+ * @param {Object} thresholds - Configuration object with comfortable/tight thresholds and text
+ * @returns {Object} Object with background color and text for pace indicator
+ */
+function getPaceIndicator(value, thresholds) {
+    if (value <= thresholds.comfortable) {
+        return { background: '#B8A9D9', text: thresholds.comfortableText };
+    } else if (value <= thresholds.tight) {
+        return { background: '#E8B4A0', text: thresholds.tightText };
+    } else {
+        return { background: '#E8B4B8', text: 'reach out to publisher' };
+    }
 }
 
-function showSlide(n) {
-    const slides = document.querySelectorAll('.testimonial-slide');
-    const dots = document.querySelectorAll('.dot');
+/**
+ * Calculate pages per day for physical books/ebooks
+ * Updates both the calculator result display and book card preview
+ */
+function calculatePhysical() {
+    const pages = parseInt(document.getElementById('demoPages').value) || 384;
+    const dateString = document.getElementById('demoDays').value;
+    const days = calculateDaysUntil(dateString);
+    const pagesPerDay = Math.ceil(pages / days);
 
-    if (n > slides.length) { currentSlideIndex = 1 }
-    if (n < 1) { currentSlideIndex = slides.length }
+    // Update calculator result
+    document.getElementById('resultNumber').textContent = pagesPerDay;
 
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
+    // Update book card
+    document.getElementById('physicalMetric').textContent = pagesPerDay;
+    document.getElementById('physicalDaysNumber').textContent = days;
+    if (dateString) {
+        document.getElementById('physicalDueDate').textContent = formatDateForDisplay(dateString);
+    }
 
-    slides[currentSlideIndex - 1].classList.add('active');
-    dots[currentSlideIndex - 1].classList.add('active');
-}
-
-// Initialize carousel on page load
-if (document.querySelector('.testimonial-slide')) {
-    showSlide(currentSlideIndex);
-
-    setInterval(() => {
-        changeSlide(1);
-    }, 30000);
-}
-
-// Mobile CTA button handler
-const mobileCta = document.querySelector('.mobile-cta');
-if (mobileCta) {
-    mobileCta.addEventListener('click', () => {
-        const waitlistSection = document.getElementById('waitlist');
-        if (waitlistSection) {
-            waitlistSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
+    // Update pace indicator
+    const paceIndicator = document.querySelector('#physicalCalc .pace-indicator');
+    const paceText = document.getElementById('paceText');
+    const pace = getPaceIndicator(pagesPerDay, {
+        comfortable: 50,
+        tight: 80,
+        comfortableText: 'comfortable pace',
+        tightText: 'tight but doable'
     });
+
+    paceIndicator.style.background = pace.background;
+    paceText.textContent = pace.text;
 }
 
-console.log('ShelfControl Landing Page initialized successfully');
+/**
+ * Calculate minutes per day for audiobooks
+ * Updates both the calculator result display and book card preview
+ */
+function calculateAudio() {
+    const hours = parseFloat(document.getElementById('demoHours').value) || 11.5;
+    const dateString = document.getElementById('demoAudioDays').value;
+    const days = calculateDaysUntil(dateString);
+    const minutesPerDay = Math.ceil((hours * 60) / days);
+
+    // Update calculator result
+    document.getElementById('resultAudioNumber').textContent = minutesPerDay;
+
+    // Update book card
+    document.getElementById('audioMetric').textContent = minutesPerDay;
+    document.getElementById('audioDaysNumber').textContent = days;
+    if (dateString) {
+        document.getElementById('audioDueDate').textContent = formatDateForDisplay(dateString);
+    }
+
+    // Update pace indicator
+    const paceIndicator = document.querySelector('#audioCalc .pace-indicator');
+    const paceText = document.getElementById('paceAudioText');
+    const pace = getPaceIndicator(minutesPerDay, {
+        comfortable: 60,
+        tight: 120,
+        comfortableText: 'comfortable pace',
+        tightText: 'need dedicated time'
+    });
+
+    paceIndicator.style.background = pace.background;
+    paceText.textContent = pace.text;
+}
