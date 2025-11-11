@@ -17,7 +17,7 @@
     --gray-light: #F8F9FA;
     --gray-medium: #6C757D;
     --gray-dark: #343A40;
-    
+
     --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-size-base: 16px;
     --font-size-sm: 14px;
@@ -26,7 +26,7 @@
     --font-size-2xl: 28px;
     --font-size-3xl: 36px;
     --font-size-4xl: 48px;
-    
+
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -35,7 +35,7 @@
     --spacing-2xl: 48px;
     --spacing-3xl: 64px;
     --spacing-4xl: 96px;
-    
+
     --border-radius: 8px;
     --border-radius-lg: 12px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,7 +71,12 @@ body {
 }
 
 /* ===== TYPOGRAPHY ===== */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: var(--spacing-md);
@@ -761,9 +766,8 @@ p {
 .footer-links {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-lg);
     flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .footer-link {
@@ -889,7 +893,7 @@ p {
     margin-bottom: var(--spacing-md);
 }
 
-.demo-content > p {
+.demo-content>p {
     font-size: var(--font-size-lg);
     color: var(--gray-medium);
     margin-bottom: var(--spacing-xl);
@@ -1371,7 +1375,7 @@ p {
         right: 0;
         padding: var(--spacing-md);
         background: var(--white);
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         z-index: 1000;
     }
 
@@ -1394,6 +1398,7 @@ p {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1404,6 +1409,7 @@ p {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -1464,12 +1470,12 @@ p {
         --font-size-3xl: 28px;
         --font-size-4xl: 36px;
     }
-    
+
     .app-screenshot {
         height: 450px;
         width: auto;
     }
-    
+
     .cta-primary {
         padding: var(--spacing-sm) var(--spacing-lg);
         font-size: var(--font-size-base);
@@ -1506,6 +1512,7 @@ select:focus {
 
 /* Print Styles */
 @media print {
+
     .navbar,
     .hero-visual,
     .footer {
@@ -1543,7 +1550,7 @@ select:focus {
     direction: rtl;
 }
 
-.problem-grid.reverse > * {
+.problem-grid.reverse>* {
     direction: ltr;
 }
 
@@ -1580,7 +1587,7 @@ select:focus {
     border-radius: 24px;
     padding: 40px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1618,7 +1625,7 @@ select:focus {
     background: linear-gradient(135deg, #F5F1EA 0%, #E8C2B9 100%);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .format-toggle {
@@ -1665,19 +1672,6 @@ select:focus {
     border-radius: 8px;
     font-size: 16px;
     background: white;
-}
-
-.calc-button {
-    width: 100%;
-    background: #8B5A8C;
-    color: white;
-    border: none;
-    padding: 16px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 24px;
 }
 
 .calc-result {
@@ -1781,7 +1775,7 @@ select:focus {
     background: white;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s;
 }
 
@@ -1828,7 +1822,7 @@ select:focus {
     background: white;
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
 .tester-avatar {
@@ -1892,7 +1886,7 @@ select:focus {
     background: white;
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
 .pricing-card.featured {
@@ -1947,6 +1941,7 @@ select:focus {
 
 /* Mobile Responsive Updates */
 @media (max-width: 768px) {
+
     .problem-grid,
     .format-cards {
         grid-template-columns: 1fr;
@@ -2205,6 +2200,130 @@ select:focus {
     }
 
     .book-info {
-      gap: 0;  
+        gap: 0;
     }
+}
+
+/* privacy policy */
+
+.app-root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f3f4f6;
+}
+
+.app-root .navbar {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.app-root .container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.app-root .navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+}
+
+.app-root .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.app-root .brand-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+.app-root .main-content {
+    flex: 1;
+    padding: 48px 0;
+    max-width: 768px;
+}
+
+.app-root .page-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 32px;
+}
+
+.app-root .prose-content {
+    color: #334155;
+    max-width: none;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.app-root .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+.app-root .subsection-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.app-root .prose-content p {
+    margin-bottom: 18px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.app-root .prose-content ul {
+    margin: 12px 0 18px 20px;
+    padding-left: 16px;
+}
+
+.app-root .prose-content li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.app-root .prose-content a {
+    color: #7c3aed;
+    text-decoration: underline;
+    transition: color 0.16s;
+}
+
+.app-root .prose-content a:hover {
+    color: #6d28d9;
+}
+
+.app-root .divider {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.app-root .footer-note {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.app-root .logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: contain;
+    display: inline-block;
 }
