@@ -10,7 +10,10 @@
     <meta property="og:title" content="ShelfControl - see which arcs you can finish on time">
     <meta property="og:description" content="Know which ARCs you can actually finish on time.">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/dashboard-1.png">
     <title>ShelfControl - see which arcs you can finish on time</title>
+    <link rel="icon" href="assets/transparent-logo.png">
+    <link rel="apple-touch-icon" href="assets/transparent-logo.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +25,10 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
-                <div class="logo">ShelfControl</div>
+                <div class="logo">
+                    <img src="assets/transparent-logo.png" alt="ShelfControl Logo" class="logo-img">
+                    ShelfControl
+                </div>
                 <div class="nav-flex-container">
                     <button class="nav-cta">join early access</button>
                 </div>
@@ -119,11 +125,11 @@
 
                         <div id="physicalCalc">
                             <div class="input-group">
-                                <label>book pages</label>
+                                <label for="demoPages">book pages</label>
                                 <input type="number" value="384" id="demoPages">
                             </div>
                             <div class="input-group">
-                                <label>due date</label>
+                                <label for="demoDays">due date</label>
                                 <input type="date" id="demoDays">
                             </div>
                             <div class="calc-result">
@@ -138,11 +144,11 @@
 
                         <div id="audioCalc" style="display: none;">
                             <div class="input-group">
-                                <label>listening time (hours)</label>
+                                <label for="demoHours">listening time (hours)</label>
                                 <input type="number" value="11.5" step="0.5" id="demoHours">
                             </div>
                             <div class="input-group">
-                                <label>due date</label>
+                                <label for="demoAudioDays">due date</label>
                                 <input type="date" id="demoAudioDays">
                             </div>
                             <button class="calc-button" onclick="calculateAudio()">calculate</button>
@@ -447,19 +453,33 @@
                 <form class="early-access-form" id="early-accessForm" action="https://api.web3forms.com/submit"
                     method="POST">
                     <input type="hidden" name="access_key" value="8282955d-7626-479b-a2ad-d53edc570acf">
-                    <input type="email" name="email" class="form-input" placeholder="enter your email" required>
-                    <select name="book_count" class="form-select optional" required>
-                        <option value="">what kind of phone do you have:</option>
-                        <option value="ios">iOS</option>
-                        <option value="android">android</option>
-                    </select>
-                    <div class="optional-fields">
-                        <input type="text" name="handle" class="form-input optional" placeholder="handle (optional)">
-                        <input type="text" name="platform" class="form-input optional"
-                            placeholder="platform (optional)">
+                    <p class="form-required-note">* indicates required field</p>
+                    <div class="form-field">
+                        <label for="email">email address *</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
                     </div>
-                    <input type="text" name="challenge" class="challenge form-input optional"
-                        placeholder="biggest due date challenge? (optional)" maxlength="100">
+                    <div class="form-field">
+                        <label for="book_count">what kind of phone do you have? *</label>
+                        <select id="book_count" name="book_count" class="form-select optional" required>
+                            <option value=""></option>
+                            <option value="ios">iOS</option>
+                            <option value="android">android</option>
+                        </select>
+                    </div>
+                    <div class="optional-fields">
+                        <div class="form-field">
+                            <label for="handle">social handle</label>
+                            <input type="text" id="handle" name="handle" class="form-input optional">
+                        </div>
+                        <div class="form-field">
+                            <label for="platform">platform</label>
+                            <input type="text" id="platform" name="platform" class="form-input optional">
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="challenge">what's your biggest due date challenge?</label>
+                        <input type="text" id="challenge" name="challenge" class="challenge form-input optional" maxlength="100">
+                    </div>
                     <button type="submit" class="form-submit">save my spot</button>
                 </form>
                 <div class="form-success" id="formSuccess">
