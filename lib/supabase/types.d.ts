@@ -178,6 +178,54 @@ export type Database = {
           },
         ]
       }
+      deadline_contacts: {
+        Row: {
+          contact_name: string | null
+          created_at: string
+          deadline_id: string
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          contact_name?: string | null
+          created_at?: string
+          deadline_id: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          contact_name?: string | null
+          created_at?: string
+          deadline_id?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deadline_contacts_deadline_id_fkey"
+            columns: ["deadline_id"]
+            isOneToOne: false
+            referencedRelation: "deadlines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deadline_contacts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deadline_notes: {
         Row: {
           created_at: string | null
@@ -293,6 +341,55 @@ export type Database = {
           },
         ]
       }
+      deadline_tags: {
+        Row: {
+          created_at: string
+          deadline_id: string
+          id: string
+          tag_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deadline_id: string
+          id?: string
+          tag_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deadline_id?: string
+          id?: string
+          tag_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deadline_tags_deadline_id_fkey"
+            columns: ["deadline_id"]
+            isOneToOne: false
+            referencedRelation: "deadlines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deadline_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deadline_tags_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deadlines: {
         Row: {
           acquisition_source: string | null
@@ -302,6 +399,9 @@ export type Database = {
           created_at: string
           deadline_date: string
           deadline_type: string | null
+          disclosure_source_name: string | null
+          disclosure_template_id: string | null
+          disclosure_text: string | null
           flexibility: Database["public"]["Enums"]["deadline_flexibility"]
           format: Database["public"]["Enums"]["book_format_enum"]
           id: string
@@ -319,6 +419,9 @@ export type Database = {
           created_at?: string
           deadline_date: string
           deadline_type?: string | null
+          disclosure_source_name?: string | null
+          disclosure_template_id?: string | null
+          disclosure_text?: string | null
           flexibility: Database["public"]["Enums"]["deadline_flexibility"]
           format: Database["public"]["Enums"]["book_format_enum"]
           id?: string
@@ -336,6 +439,9 @@ export type Database = {
           created_at?: string
           deadline_date?: string
           deadline_type?: string | null
+          disclosure_source_name?: string | null
+          disclosure_template_id?: string | null
+          disclosure_text?: string | null
           flexibility?: Database["public"]["Enums"]["deadline_flexibility"]
           format?: Database["public"]["Enums"]["book_format_enum"]
           id?: string
@@ -354,7 +460,136 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "deadlines_disclosure_template_id_fkey"
+            columns: ["disclosure_template_id"]
+            isOneToOne: false
+            referencedRelation: "disclosure_templates"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "deadlines_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      disclosure_templates: {
+        Row: {
+          created_at: string
+          disclosure_text: string
+          id: string
+          source_name: string
+          template_name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          disclosure_text: string
+          id: string
+          source_name: string
+          template_name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          disclosure_text?: string
+          id?: string
+          source_name?: string
+          template_name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disclosure_templates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hashtags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hashtags_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      note_hashtags: {
+        Row: {
+          created_at: string
+          hashtag_id: string
+          id: string
+          note_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hashtag_id: string
+          id?: string
+          note_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hashtag_id?: string
+          id?: string
+          note_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "note_hashtags_hashtag_id_fkey"
+            columns: ["hashtag_id"]
+            isOneToOne: false
+            referencedRelation: "hashtags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "note_hashtags_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "deadline_notes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "note_hashtags_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -483,6 +718,41 @@ export type Database = {
           },
         ]
       }
+      tags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tags_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_activities: {
         Row: {
           activity_data: Json | null
@@ -559,6 +829,17 @@ export type Database = {
     }
     Functions: {
       generate_prefixed_id: { Args: { prefix: string }; Returns: string }
+      get_daily_activities: {
+        Args: { p_end_date: string; p_start_date: string; p_user_id: string }
+        Returns: {
+          activity_date: string
+          activity_timestamp: string
+          activity_type: string
+          book_title: string
+          deadline_id: string
+          metadata: Json
+        }[]
+      }
       get_reading_notes_csv: {
         Args: { p_user_id: string }
         Returns: {
@@ -572,21 +853,41 @@ export type Database = {
       get_reading_progress_csv: {
         Args: { p_user_id: string }
         Returns: {
+          acquisition_source: string
+          all_reviews_complete: boolean
           author: string
           book_title: string
           completed_date: string
+          contact_email: string
+          contact_name: string
+          contact_username: string
           created_date: string
           current_progress: number
-          days_remaining: number
           deadline_date: string
+          disclosure_source_name: string
+          disclosure_text: string
           flexibility: string
           format: string
           last_progress_update: string
-          pages_per_day_needed: number
-          source: string
+          needs_link_submission: boolean
+          publishers: string
+          review_due_date: string
           status: string
+          tags: string
           total_quantity: number
+          type: string
           unit: string
+        }[]
+      }
+      get_review_platforms_csv: {
+        Args: { p_user_id: string }
+        Returns: {
+          book_title: string
+          deadline_id: string
+          platform_name: string
+          posted: boolean
+          posted_date: string
+          review_url: string
         }[]
       }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
@@ -600,6 +901,8 @@ export type Database = {
         | "paused"
         | "to_review"
         | "complete"
+        | "rejected"
+        | "withdrew"
         | "did_not_finish"
       user_role: "user" | "admin" | "super-admin"
     }
@@ -737,6 +1040,8 @@ export const Constants = {
         "paused",
         "to_review",
         "complete",
+        "rejected",
+        "withdrew",
         "did_not_finish",
       ],
       user_role: ["user", "admin", "super-admin"],
