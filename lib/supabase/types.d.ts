@@ -1029,22 +1029,3 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
-export const Constants = {
-  public: {
-    Enums: {
-      book_format_enum: ["physical", "eBook", "audio"],
-      deadline_flexibility: ["flexible", "strict"],
-      deadline_status_enum: [
-        "pending",
-        "reading",
-        "paused",
-        "to_review",
-        "complete",
-        "rejected",
-        "withdrew",
-        "did_not_finish",
-      ],
-      user_role: ["user", "admin", "super-admin"],
-    },
-  },
-} as const
