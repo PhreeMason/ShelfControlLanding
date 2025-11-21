@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
 
           <p>
             The Application uses PostHog, a third-party analytics service, to
-            collect anonymized usage metrics and improve the Application&apos;s
+            collect usage metrics and improve the Application&apos;s
             performance and functionality. This helps us understand how users
             interact with the Application and identify areas for improvement.
           </p>
@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
           </p>
 
           <p>
-            The only third-party service that receives anonymized, aggregated
+            The only third-party service that receives aggregated
             usage metrics is PostHog, which we use solely for analytics to
             improve the Application. This data cannot be used to identify
             individual users.
@@ -207,14 +207,14 @@ export default function PrivacyPolicyPage() {
 
           <p>
             The Service Provider does not use the Application to knowingly
-            solicit data from or market to children under the age of 13.
+            solicit data from or market to children under the age of 18.
           </p>
 
           <p>
-            The Application does not address anyone under the age of 13. The
+            The Application does not address anyone under the age of 18. The
             Service Provider does not knowingly collect personally identifiable
-            information from children under 13 years of age. In the case the
-            Service Provider discover that a child under 13 has provided
+            information from children under 18 years of age. In the case the
+            Service Provider discover that a child under 18 has provided
             personal information, the Service Provider will immediately delete
             this from their servers. If you are a parent or guardian and you are
             aware that your child has provided us with personal information,
@@ -272,7 +272,7 @@ export default function PrivacyPolicyPage() {
           </p>
 
           <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
-            Contact us
+            Contact US
           </h2>
 
           <p>
