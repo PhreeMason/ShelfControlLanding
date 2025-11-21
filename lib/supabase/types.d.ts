@@ -396,6 +396,7 @@ export type Database = {
           author: string | null
           book_id: string | null
           book_title: string
+          cover_image_url: string | null
           created_at: string
           deadline_date: string
           deadline_type: string | null
@@ -416,6 +417,7 @@ export type Database = {
           author?: string | null
           book_id?: string | null
           book_title: string
+          cover_image_url?: string | null
           created_at?: string
           deadline_date: string
           deadline_type?: string | null
@@ -436,6 +438,7 @@ export type Database = {
           author?: string | null
           book_id?: string | null
           book_title?: string
+          cover_image_url?: string | null
           created_at?: string
           deadline_date?: string
           deadline_type?: string | null
@@ -1029,3 +1032,22 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
+export const Constants = {
+  public: {
+    Enums: {
+      book_format_enum: ["physical", "eBook", "audio"],
+      deadline_flexibility: ["flexible", "strict"],
+      deadline_status_enum: [
+        "pending",
+        "reading",
+        "paused",
+        "to_review",
+        "complete",
+        "rejected",
+        "withdrew",
+        "did_not_finish",
+      ],
+      user_role: ["user", "admin", "super-admin"],
+    },
+  },
+} as const

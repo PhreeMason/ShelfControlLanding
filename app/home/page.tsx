@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "lucide-react";
 import Image from "next/image";
+import { DeleteAccountDialog } from "@/components/delete-account-dialog";
+import { DeleteUserDataDialog } from "@/components/delete-user-data-dialog";
 
-export default async function ProtectedPage() {
+export default async function HomePage() {
   const supabase = await createClient();
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -118,6 +120,39 @@ export default async function ProtectedPage() {
             <Button asChild>
               <a href="/protected/profile/edit">Edit Profile</a>
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-destructive">
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+          <CardDescription>
+            Irreversible and destructive actions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border border-destructive/50 rounded-lg bg-destructive/5">
+            <div className="space-y-1">
+              <p className="font-medium text-sm">Delete All My Data</p>
+              <p className="text-sm text-muted-foreground">
+                Permanently delete all your deadlines and associated data (notes, progress, tags, etc.). This action cannot be undone.
+              </p>
+            </div>
+            <DeleteUserDataDialog />
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border border-destructive/50 rounded-lg bg-destructive/5">
+            <div className="space-y-1">
+              <p className="font-medium text-sm">Delete Account</p>
+              <p className="text-sm text-muted-foreground">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+            </div>
+            <DeleteAccountDialog
+              identifier={profile?.username || profile?.email || userData.user.email || ""}
+              identifierType={profile?.username ? "username" : "email"}
+            />
           </div>
         </CardContent>
       </Card>

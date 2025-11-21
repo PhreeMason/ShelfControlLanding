@@ -4,12 +4,12 @@ import { Logo } from "@/components/logo";
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="w-full border-b border-slate-200 bg-white sticky top-0 z-50">
+      <nav className="w-full border-b border-border bg-background sticky top-0 z-50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <Logo className="w-8 h-8" />
-              <span className="font-bold text-xl text-slate-900">
+              <span className="font-bold text-xl text-foreground">
                 ShelfControl
               </span>
             </Link>
@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
       </nav>
 
       <main className="flex-1 container mx-auto px-4 md:px-6 py-12 max-w-4xl">
-        <h1 className="text-4xl font-bold text-slate-900 mb-8">
+        <h1 className="text-4xl font-bold text-foreground mb-8">
           Privacy Policy
         </h1>
 
@@ -31,11 +31,11 @@ export default function PrivacyPolicyPage() {
             service is provided &quot;AS IS&quot;.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             What information does the Application obtain and how is it used?
           </h2>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-6 mb-3">
+          <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
             User Provided Information
           </h3>
 
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
             information, required notices and marketing promotions.
           </p>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-6 mb-3">
+          <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
             Automatically Collected Information
           </h3>
 
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
             use the Application.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Analytics and App Metrics
           </h2>
 
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
             the Application experience.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Do third parties see and/or have access to information obtained by
             the Application?
           </h2>
@@ -168,7 +168,7 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             What are my opt-out rights?
           </h2>
 
@@ -179,7 +179,7 @@ export default function PrivacyPolicyPage() {
             the mobile application marketplace or network.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Data Retention Policy, Managing Your Information
           </h2>
 
@@ -191,17 +191,17 @@ export default function PrivacyPolicyPage() {
             you&apos;d like the Service Provider to delete User Provided Data
             that you have provided via the Application, please contact them at{" "}
             <a
-              href="mailto:Mason@grizzylabs.com"
+              href="mailto:support@shelfcontrolapp.com"
               className="text-violet-700 hover:text-violet-800"
             >
-              Mason@grizzylabs.com
+              support@shelfcontrolapp.com
             </a>{" "}
             and we will respond in a reasonable time. Please note that some or
             all of the User Provided Data may be required in order for the
             Application to function properly.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Children
           </h2>
 
@@ -220,15 +220,15 @@ export default function PrivacyPolicyPage() {
             aware that your child has provided us with personal information,
             please contact the Service Provider (
             <a
-              href="mailto:Mason@grizzylabs.com"
+              href="mailto:support@shelfcontrolapp.com"
               className="text-violet-700 hover:text-violet-800"
             >
-              Mason@grizzylabs.com
+              support@shelfcontrolapp.com
             </a>
             ) so that they will be able to take the necessary actions.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Security
           </h2>
 
@@ -244,7 +244,7 @@ export default function PrivacyPolicyPage() {
             security system can prevent all potential security breaches.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Changes
           </h2>
 
@@ -258,7 +258,7 @@ export default function PrivacyPolicyPage() {
 
           <p>This privacy policy is effective as of 2025-10-30</p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Your Consent
           </h2>
 
@@ -271,7 +271,7 @@ export default function PrivacyPolicyPage() {
             storing, deleting, using, combining and disclosing information.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
             Contact us
           </h2>
 
@@ -280,17 +280,17 @@ export default function PrivacyPolicyPage() {
             Application, or have questions about the practices, please contact
             the Service Provider via email at{" "}
             <a
-              href="mailto:Mason@grizzylabs.com"
+              href="mailto:support@shelfcontrolapp.com"
               className="text-violet-700 hover:text-violet-800"
             >
-              Mason@grizzylabs.com
+              support@shelfcontrolapp.com
             </a>
             .
           </p>
 
           <hr className="my-8" />
 
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted-foreground">
             This privacy policy page was generated by{" "}
             <a
               href="https://app-privacy-policy-generator.nisrulz.com/"

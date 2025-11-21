@@ -10,20 +10,31 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "ShelfControl - From drowning to breathing",
-  description: "ShelfControl shows which ARCs you can actually finish on time",
+  title: "ShelfControl - see which arcs you can finish on time",
+  description: "ShelfControl - Know which ARCs you can actually finish on time.",
+  keywords: "ARC, book reviews, NetGalley, reading due dates, book tracking, arc tracker, arc tracking, advance reader copy, arc reader, arc reviewer, book reviewer",
+  icons: {
+    icon: "/assets/transparent-logo.png",
+    apple: "/assets/transparent-logo.png",
+  },
   openGraph: {
-    title: "ShelfControl - From drowning to breathing",
-    description: "See which ARCs you can actually finish on time based on your reading speed and capacity",
+    title: "ShelfControl - see which arcs you can finish on time",
+    description: "Know which ARCs you can actually finish on time.",
     url: defaultUrl,
     siteName: "ShelfControl",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/assets/dashboard-1.png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShelfControl - From drowning to breathing",
-    description: "See which ARCs you can actually finish on time based on your reading speed and capacity",
+    title: "ShelfControl - see which arcs you can finish on time",
+    description: "Know which ARCs you can actually finish on time.",
+    images: ["/assets/dashboard-1.png"],
   },
 };
 
