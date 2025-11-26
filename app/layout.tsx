@@ -10,16 +10,16 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "ShelfControl - see which arcs you can finish on time",
-  description: "ShelfControl - Know which ARCs you can actually finish on time.",
-  keywords: "ARC, book reviews, NetGalley, reading due dates, book tracking, arc tracker, arc tracking, advance reader copy, arc reader, arc reviewer, book reviewer",
+  title: "ShelfControl - stop forgetting which arcs are due",
+  description: "Stop forgetting which ARCs are due. See all your review copies in one place with days left and pages per day at your comfortable pace.",
+  keywords: "ARC, advance reader copy, NetGalley, arc due dates, forgetting arcs, ADHD reading, arc organizer, multiple arcs, ebook arc, audio arc, book reviewer, pages per day, arc calendar, overwhelmed by arcs",
   icons: {
     icon: "/assets/transparent-logo.png",
     apple: "/assets/transparent-logo.png",
   },
   openGraph: {
-    title: "ShelfControl - see which arcs you can finish on time",
-    description: "Know which ARCs you can actually finish on time.",
+    title: "ShelfControl - stop forgetting which arcs are due",
+    description: "Finally see all your ARCs in one place. Know which ones are due, how many pages per day you need, and what you can finish at your comfortable pace.",
     url: defaultUrl,
     siteName: "ShelfControl",
     locale: "en_US",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShelfControl - see which arcs you can finish on time",
-    description: "Know which ARCs you can actually finish on time.",
+    title: "ShelfControl - stop forgetting which arcs are due",
+    description: "Finally see all your ARCs in one place. Know which ones are due, how many pages per day you need, and what you can finish at your comfortable pace.",
     images: ["/assets/dashboard-1.png"],
   },
 };
