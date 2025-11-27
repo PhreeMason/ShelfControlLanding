@@ -917,6 +917,13 @@ export type Database = {
           count: number
         }[]
       }
+      get_format_distribution: {
+        Args: { p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
+        Returns: {
+          format: string
+          count: number
+        }[]
+      }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
     }
     Enums: {

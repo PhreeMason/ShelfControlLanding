@@ -4,11 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { TEST_USER_IDS } from "@/lib/config/test-users";
 import { formatUserName } from "@/lib/utils/format-user-name";
 
-export interface ActivityTypeData {
-  activity_type: string;
-  count: number;
-}
-
 export interface SearchAnalyticsData {
   total_searches: number;
   popular_queries: Array<{
@@ -21,18 +16,6 @@ export interface SearchAnalyticsData {
   }>;
 }
 
-export interface DeadlineStatsData {
-  status_breakdown: Array<{
-    status: string;
-    count: number;
-  }>;
-  deadlines_by_date: Array<{
-    date: string;
-    count: number;
-  }>;
-  total_deadlines: number;
-}
-
 export interface UserInfo {
   id: string;
   email: string | null;
@@ -41,8 +24,8 @@ export interface UserInfo {
   last_name: string | null;
 }
 
-export interface DeadlinesOverTimeData {
-  date: string;
+export interface DeadlineStatusBreakdownData {
+  status: string;
   count: number;
 }
 
@@ -57,88 +40,21 @@ export interface ActivityTypesOverTimeData {
   }[];
 }
 
-export async function getActivityTypesBreakdown(
-  userIds?: string[]
-): Promise<ActivityTypeData[]> {
-  const supabase = createAdminClient();
-
-  let query = supabase
-    .from("user_activities")
-    .select("activity_type")
-    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`);
-
-  if (userIds && userIds.length > 0) {
-    query = query.in("user_id", userIds);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    return [];
-  }
-
-  const breakdown = data.reduce(
-    (acc: Record<string, number>, activity) => {
-      acc[activity.activity_type] = (acc[activity.activity_type] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
-
-  return Object.entries(breakdown).map(([activity_type, count]) => ({
-    activity_type,
-    count,
-  }));
-}
-
 export async function getActivityTypesOverTime(
   userIds?: string[],
   days: number = 14
 ): Promise<ActivityTypesOverTimeData> {
   const supabase = createAdminClient();
 
-  const daysAgo = new Date();
-  daysAgo.setDate(daysAgo.getDate() - days);
-  daysAgo.setHours(0, 0, 0, 0);
-  const daysAgoStr = daysAgo.toISOString();
+  const { data, error } = await supabase.rpc("get_activity_types_over_time", {
+    p_days: days,
+    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_exclude_user_ids: TEST_USER_IDS,
+  });
 
-  // Paginate to get all records (Supabase has 1000 row limit per request)
-  const allData: { activity_type: string; timestamp: string | null }[] = [];
-  let page = 0;
-  const pageSize = 1000;
-
-  while (true) {
-    let query = supabase
-      .from("user_activities")
-      .select("activity_type, timestamp")
-      .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`)
-      .gte("timestamp", daysAgoStr)
-      .order("timestamp", { ascending: false })
-      .range(page * pageSize, (page + 1) * pageSize - 1);
-
-    if (userIds && userIds.length > 0) {
-      query = query.in("user_id", userIds);
-    }
-
-    const { data, error } = await query;
-
-    if (error || !data || data.length === 0) {
-      break;
-    }
-
-    allData.push(...data);
-
-    if (data.length < pageSize) {
-      break; // Last page
-    }
-    page++;
-  }
-
-  if (allData.length === 0) {
+  if (error || !data || data.length === 0) {
     return { dates: [], datasets: [] };
   }
-
-  const data = allData;
 
   // Build date range
   const dateRange: string[] = [];
@@ -148,18 +64,13 @@ export async function getActivityTypesOverTime(
     dateRange.push(date.toISOString().split("T")[0]);
   }
 
-  // Group by activity type and date
+  // Group RPC results by activity type
   const activityByTypeAndDate = new Map<string, Map<string, number>>();
-
-  data.forEach((activity) => {
-    const date = new Date(activity.timestamp!).toISOString().split("T")[0];
-    const type = activity.activity_type;
-
-    if (!activityByTypeAndDate.has(type)) {
-      activityByTypeAndDate.set(type, new Map());
+  data.forEach((row) => {
+    if (!activityByTypeAndDate.has(row.activity_type)) {
+      activityByTypeAndDate.set(row.activity_type, new Map());
     }
-    const dateMap = activityByTypeAndDate.get(type)!;
-    dateMap.set(date, (dateMap.get(date) || 0) + 1);
+    activityByTypeAndDate.get(row.activity_type)!.set(row.activity_date, row.count);
   });
 
   const colors = [
@@ -176,11 +87,11 @@ export async function getActivityTypesOverTime(
   const datasets = Array.from(activityByTypeAndDate.entries()).map(
     ([activityType, dateMap], index) => {
       const color = colors[index % colors.length];
-      const data = dateRange.map((date) => dateMap.get(date) || 0);
+      const chartData = dateRange.map((date) => dateMap.get(date) || 0);
 
       return {
         label: activityType,
-        data,
+        data: chartData,
         borderColor: color,
         backgroundColor: color,
         tension: 0.1,
@@ -257,84 +168,6 @@ export async function getSearchAnalytics(
   };
 }
 
-export async function getDeadlineStats(
-  userIds?: string[]
-): Promise<DeadlineStatsData> {
-  const supabase = createAdminClient();
-
-  let deadlinesQuery = supabase
-    .from("deadlines")
-    .select("id, created_at")
-    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`);
-
-  if (userIds && userIds.length > 0) {
-    deadlinesQuery = deadlinesQuery.in("user_id", userIds);
-  }
-
-  const { data: deadlines, error: deadlinesError } = await deadlinesQuery;
-
-  if (deadlinesError) {
-    return {
-      status_breakdown: [],
-      deadlines_by_date: [],
-      total_deadlines: 0,
-    };
-  }
-
-  const deadlineIds = deadlines.map(d => d.id);
-
-  if (deadlineIds.length === 0) {
-    return {
-      status_breakdown: [],
-      deadlines_by_date: [],
-      total_deadlines: 0,
-    };
-  }
-
-  const { data: statuses } = await supabase
-    .from("deadline_status")
-    .select("deadline_id, status, updated_at")
-    .in("deadline_id", deadlineIds)
-    .order("updated_at", { ascending: false });
-
-  const latestStatusByDeadline = new Map<string, string>();
-
-  (statuses || []).forEach((item) => {
-    if (item.deadline_id && !latestStatusByDeadline.has(item.deadline_id)) {
-      latestStatusByDeadline.set(item.deadline_id, item.status || "unknown");
-    }
-  });
-
-  const statusCount: Record<string, number> = {};
-  latestStatusByDeadline.forEach((status) => {
-    statusCount[status] = (statusCount[status] || 0) + 1;
-  });
-
-  const status_breakdown = Object.entries(statusCount).map(([status, count]) => ({
-    status,
-    count,
-  }));
-
-  const dateCount = deadlines.reduce(
-    (acc: Record<string, number>, deadline) => {
-      const date = new Date(deadline.created_at).toISOString().split("T")[0];
-      acc[date] = (acc[date] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
-
-  const deadlines_by_date = Object.entries(dateCount)
-    .map(([date, count]) => ({ date, count }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-
-  return {
-    status_breakdown,
-    deadlines_by_date,
-    total_deadlines: deadlines.length,
-  };
-}
-
 export async function getAllUsers(): Promise<UserInfo[]> {
   const supabase = createAdminClient();
 
@@ -351,98 +184,21 @@ export async function getAllUsers(): Promise<UserInfo[]> {
   return data;
 }
 
-export async function getDeadlinesOverTime(
+export async function getDeadlinesByStatus(
   userIds?: string[]
-): Promise<DeadlinesOverTimeData[]> {
+): Promise<DeadlineStatusBreakdownData[]> {
   const supabase = createAdminClient();
 
-  let query = supabase
-    .from("deadlines")
-    .select("created_at")
-    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`);
+  const { data, error } = await supabase.rpc("get_deadline_status_breakdown", {
+    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_exclude_user_ids: TEST_USER_IDS,
+  });
 
-  if (userIds && userIds.length > 0) {
-    query = query.in("user_id", userIds);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
+  if (error || !data) {
     return [];
   }
 
-  const dateCount = data.reduce(
-    (acc: Record<string, number>, deadline) => {
-      const date = new Date(deadline.created_at).toISOString().split("T")[0];
-      acc[date] = (acc[date] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
-
-  return Object.entries(dateCount)
-    .map(([date, count]) => ({ date, count }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
-const ACTIVE_STATUSES = ["pending", "reading"];
-
-export async function getOverdueDeadlines(
-  userIds?: string[]
-): Promise<DeadlinesOverTimeData[]> {
-  const supabase = createAdminClient();
-
-  const today = new Date().toISOString().split("T")[0];
-
-  let deadlinesQuery = supabase
-    .from("deadlines")
-    .select("id, deadline_date")
-    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`)
-    .lt("deadline_date", today);
-
-  if (userIds && userIds.length > 0) {
-    deadlinesQuery = deadlinesQuery.in("user_id", userIds);
-  }
-
-  const { data: deadlines, error: deadlinesError } = await deadlinesQuery;
-
-  if (deadlinesError || !deadlines || deadlines.length === 0) {
-    return [];
-  }
-
-  const deadlineIds = deadlines.map((d) => d.id);
-
-  const { data: statuses } = await supabase
-    .from("deadline_status")
-    .select("deadline_id, status, updated_at")
-    .in("deadline_id", deadlineIds)
-    .order("updated_at", { ascending: false });
-
-  const latestStatusByDeadline = new Map<string, string>();
-
-  (statuses || []).forEach((item) => {
-    if (item.deadline_id && !latestStatusByDeadline.has(item.deadline_id)) {
-      latestStatusByDeadline.set(item.deadline_id, item.status || "pending");
-    }
-  });
-
-  const overdueDeadlines = deadlines.filter((deadline) => {
-    const status = latestStatusByDeadline.get(deadline.id) || "pending";
-    return ACTIVE_STATUSES.includes(status);
-  });
-
-  const dateCount = overdueDeadlines.reduce(
-    (acc: Record<string, number>, deadline) => {
-      const date = deadline.deadline_date;
-      acc[date] = (acc[date] || 0) + 1;
-      return acc;
-    },
-    {}
-  );
-
-  return Object.entries(dateCount)
-    .map(([date, count]) => ({ date, count }))
-    .sort((a, b) => a.date.localeCompare(b.date));
+  return data;
 }
 
 export interface ProgressOverTimeData {
@@ -463,10 +219,32 @@ export interface TopBookData {
   deadline_count: number;
 }
 
+export interface FormatDistributionData {
+  format: string;
+  count: number;
+}
+
 export async function getTopBooks(limit: number = 10): Promise<TopBookData[]> {
   const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc("get_top_books", { p_limit: limit });
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data;
+}
+
+export async function getFormatDistribution(
+  userIds?: string[]
+): Promise<FormatDistributionData[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_format_distribution", {
+    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_exclude_user_ids: TEST_USER_IDS,
+  });
 
   if (error || !data) {
     return [];
