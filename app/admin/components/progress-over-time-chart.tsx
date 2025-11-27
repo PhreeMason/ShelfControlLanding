@@ -138,9 +138,9 @@ export function ProgressOverTimeChart() {
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-foreground">Filter by User:</h4>
             <div className="flex flex-wrap gap-3">
-              {data.datasets.map((dataset) => (
+              {data.datasets.map((dataset, index) => (
                 <label
-                  key={dataset.label}
+                  key={`${dataset.label}-${index}`}
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <input

@@ -46,6 +46,17 @@ export interface DeadlinesOverTimeData {
   count: number;
 }
 
+export interface ActivityTypesOverTimeData {
+  dates: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+    tension: number;
+  }[];
+}
+
 export async function getActivityTypesBreakdown(
   userIds?: string[]
 ): Promise<ActivityTypeData[]> {
@@ -78,6 +89,114 @@ export async function getActivityTypesBreakdown(
     activity_type,
     count,
   }));
+}
+
+export async function getActivityTypesOverTime(
+  userIds?: string[],
+  days: number = 14
+): Promise<ActivityTypesOverTimeData> {
+  const supabase = createAdminClient();
+
+  const daysAgo = new Date();
+  daysAgo.setDate(daysAgo.getDate() - days);
+  daysAgo.setHours(0, 0, 0, 0);
+  const daysAgoStr = daysAgo.toISOString();
+
+  // Paginate to get all records (Supabase has 1000 row limit per request)
+  const allData: { activity_type: string; timestamp: string | null }[] = [];
+  let page = 0;
+  const pageSize = 1000;
+
+  while (true) {
+    let query = supabase
+      .from("user_activities")
+      .select("activity_type, timestamp")
+      .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`)
+      .gte("timestamp", daysAgoStr)
+      .order("timestamp", { ascending: false })
+      .range(page * pageSize, (page + 1) * pageSize - 1);
+
+    if (userIds && userIds.length > 0) {
+      query = query.in("user_id", userIds);
+    }
+
+    const { data, error } = await query;
+
+    if (error || !data || data.length === 0) {
+      break;
+    }
+
+    allData.push(...data);
+
+    if (data.length < pageSize) {
+      break; // Last page
+    }
+    page++;
+  }
+
+  if (allData.length === 0) {
+    return { dates: [], datasets: [] };
+  }
+
+  const data = allData;
+
+  // Build date range
+  const dateRange: string[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    dateRange.push(date.toISOString().split("T")[0]);
+  }
+
+  // Group by activity type and date
+  const activityByTypeAndDate = new Map<string, Map<string, number>>();
+
+  data.forEach((activity) => {
+    const date = new Date(activity.timestamp!).toISOString().split("T")[0];
+    const type = activity.activity_type;
+
+    if (!activityByTypeAndDate.has(type)) {
+      activityByTypeAndDate.set(type, new Map());
+    }
+    const dateMap = activityByTypeAndDate.get(type)!;
+    dateMap.set(date, (dateMap.get(date) || 0) + 1);
+  });
+
+  const colors = [
+    "#3b82f6",
+    "#ef4444",
+    "#10b981",
+    "#f59e0b",
+    "#8b5cf6",
+    "#ec4899",
+    "#14b8a6",
+    "#f97316",
+  ];
+
+  const datasets = Array.from(activityByTypeAndDate.entries()).map(
+    ([activityType, dateMap], index) => {
+      const color = colors[index % colors.length];
+      const data = dateRange.map((date) => dateMap.get(date) || 0);
+
+      return {
+        label: activityType,
+        data,
+        borderColor: color,
+        backgroundColor: color,
+        tension: 0.1,
+      };
+    }
+  );
+
+  const formattedDates = dateRange.map((date) => {
+    const [, month, day] = date.split("-");
+    return `${parseInt(month)}/${parseInt(day)}`;
+  });
+
+  return {
+    dates: formattedDates,
+    datasets,
+  };
 }
 
 export async function getSearchAnalytics(
@@ -266,6 +385,66 @@ export async function getDeadlinesOverTime(
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
+const ACTIVE_STATUSES = ["pending", "reading"];
+
+export async function getOverdueDeadlines(
+  userIds?: string[]
+): Promise<DeadlinesOverTimeData[]> {
+  const supabase = createAdminClient();
+
+  const today = new Date().toISOString().split("T")[0];
+
+  let deadlinesQuery = supabase
+    .from("deadlines")
+    .select("id, deadline_date")
+    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`)
+    .lt("deadline_date", today);
+
+  if (userIds && userIds.length > 0) {
+    deadlinesQuery = deadlinesQuery.in("user_id", userIds);
+  }
+
+  const { data: deadlines, error: deadlinesError } = await deadlinesQuery;
+
+  if (deadlinesError || !deadlines || deadlines.length === 0) {
+    return [];
+  }
+
+  const deadlineIds = deadlines.map((d) => d.id);
+
+  const { data: statuses } = await supabase
+    .from("deadline_status")
+    .select("deadline_id, status, updated_at")
+    .in("deadline_id", deadlineIds)
+    .order("updated_at", { ascending: false });
+
+  const latestStatusByDeadline = new Map<string, string>();
+
+  (statuses || []).forEach((item) => {
+    if (item.deadline_id && !latestStatusByDeadline.has(item.deadline_id)) {
+      latestStatusByDeadline.set(item.deadline_id, item.status || "pending");
+    }
+  });
+
+  const overdueDeadlines = deadlines.filter((deadline) => {
+    const status = latestStatusByDeadline.get(deadline.id) || "pending";
+    return ACTIVE_STATUSES.includes(status);
+  });
+
+  const dateCount = overdueDeadlines.reduce(
+    (acc: Record<string, number>, deadline) => {
+      const date = deadline.deadline_date;
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
+
+  return Object.entries(dateCount)
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
 export interface ProgressOverTimeData {
   dates: string[];
   datasets: {
@@ -275,6 +454,25 @@ export interface ProgressOverTimeData {
     backgroundColor: string;
     tension: number;
   }[];
+}
+
+export interface TopBookData {
+  book_id: string;
+  title: string;
+  cover_image_url: string | null;
+  deadline_count: number;
+}
+
+export async function getTopBooks(limit: number = 10): Promise<TopBookData[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_top_books", { p_limit: limit });
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data;
 }
 
 interface ProgressRecord {

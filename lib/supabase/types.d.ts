@@ -893,6 +893,15 @@ export type Database = {
           review_url: string
         }[]
       }
+      get_top_books: {
+        Args: { p_limit?: number }
+        Returns: {
+          book_id: string
+          title: string
+          cover_image_url: string | null
+          deadline_count: number
+        }[]
+      }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
     }
     Enums: {

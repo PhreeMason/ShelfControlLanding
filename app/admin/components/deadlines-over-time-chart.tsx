@@ -14,7 +14,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import { useQuery } from "@tanstack/react-query";
-import { getDeadlinesOverTime } from "@/lib/actions/admin-analytics";
+import { getOverdueDeadlines } from "@/lib/actions/admin-analytics";
 import { UserFilter } from "./user-filter";
 
 ChartJS.register(
@@ -31,18 +31,18 @@ export function DeadlinesOverTimeChart() {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   const { data: deadlinesData = [], isLoading } = useQuery({
-    queryKey: ["deadlines-over-time", selectedUserIds],
-    queryFn: () => getDeadlinesOverTime(selectedUserIds.length > 0 ? selectedUserIds : undefined),
+    queryKey: ["overdue-deadlines", selectedUserIds],
+    queryFn: () => getOverdueDeadlines(selectedUserIds.length > 0 ? selectedUserIds : undefined),
   });
 
   const chartData = {
     labels: deadlinesData.map((item) => item.date),
     datasets: [
       {
-        label: "Deadlines Created",
+        label: "Overdue Deadlines",
         data: deadlinesData.map((item) => item.count),
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(239, 68, 68, 1)",
+        backgroundColor: "rgba(239, 68, 68, 0.2)",
         tension: 0.1,
       },
     ],
@@ -57,7 +57,7 @@ export function DeadlinesOverTimeChart() {
       },
       title: {
         display: true,
-        text: "Deadlines Created Over Time",
+        text: "Overdue Deadlines",
       },
     },
     scales: {
@@ -96,7 +96,7 @@ export function DeadlinesOverTimeChart() {
         </div>
       ) : deadlinesData.length === 0 ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
-          No deadline data available
+          No overdue deadlines
         </div>
       ) : (
         <div className="h-64">

@@ -1,10 +1,11 @@
 "use client";
 
 import { ActivityTypesChart } from "./components/activity-types-chart";
-import { SearchAnalyticsChart } from "./components/search-analytics-chart";
+import { ActivityComparisonChart } from "./components/activity-comparison-chart";
 import { DeadlineStatsChart } from "./components/deadline-stats-chart";
 import { DeadlinesOverTimeChart } from "./components/deadlines-over-time-chart";
 import { ProgressOverTimeChart } from "./components/progress-over-time-chart";
+import { TopBooksChart } from "./components/top-books-chart";
 
 export default function AdminDashboard() {
   return (
@@ -18,14 +19,18 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="rounded-lg border p-6">
-            <h2 className="text-2xl font-semibold mb-4">Activity Types</h2>
+          <div className="rounded-lg border p-6 lg:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Top Books</h2>
+            <TopBooksChart />
+          </div>
+          <div className="rounded-lg border p-6 lg:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Activity Types Over Time</h2>
             <ActivityTypesChart />
           </div>
 
-          <div className="rounded-lg border p-6">
-            <h2 className="text-2xl font-semibold mb-4">Search Analytics</h2>
-            <SearchAnalyticsChart />
+          <div className="rounded-lg border p-6 lg:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Activity Comparison</h2>
+            <ActivityComparisonChart />
           </div>
 
           <div className="rounded-lg border p-6 lg:col-span-2">
