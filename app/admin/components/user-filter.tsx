@@ -12,12 +12,14 @@ interface UserFilterProps {
   selectedUserIds: string[];
   onUserToggle: (userId: string) => void;
   onClearFilters: () => void;
+  onSelectAll?: () => void;
 }
 
 export function UserFilter({
   selectedUserIds,
   onUserToggle,
   onClearFilters,
+  onSelectAll,
 }: UserFilterProps) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -57,14 +59,27 @@ export function UserFilter({
     <div className="flex flex-col gap-2" ref={containerRef}>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium">Filter by Users</h3>
-        {selectedUserIds.length > 0 && (
-          <button
-            onClick={onClearFilters}
-            className="text-xs text-muted-foreground hover:text-foreground underline"
-          >
-            Clear all
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onSelectAll && (
+            <button
+              onClick={onSelectAll}
+              className="text-xs text-muted-foreground hover:text-foreground underline"
+            >
+              Select all
+            </button>
+          )}
+          {onSelectAll && selectedUserIds.length > 0 && (
+            <span className="text-muted-foreground">|</span>
+          )}
+          {selectedUserIds.length > 0 && (
+            <button
+              onClick={onClearFilters}
+              className="text-xs text-muted-foreground hover:text-foreground underline"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
       </div>
 
       {selectedUsers.length > 0 && (

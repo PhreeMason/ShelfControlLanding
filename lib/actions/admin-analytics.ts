@@ -283,7 +283,8 @@ interface DeadlineProgressQueryResult {
 
 export async function getProgressOverTime(
   timezoneOffsetMinutes?: number,
-  days: number = 30
+  days: number = 30,
+  userIds?: string[]
 ): Promise<ProgressOverTimeData> {
   const supabase = createAdminClient();
 
@@ -295,7 +296,7 @@ export async function getProgressOverTime(
   daysAgo.setHours(0, 0, 0, 0);
   const daysAgoStr = daysAgo.toISOString();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("deadline_progress")
     .select(
       `
@@ -307,7 +308,13 @@ export async function getProgressOverTime(
     `
     )
     .gte("created_at", daysAgoStr)
-    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`)
+    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`);
+
+  if (userIds && userIds.length > 0) {
+    query = query.in("deadlines.user_id", userIds);
+  }
+
+  const { data, error } = await query
     .order("deadline_id")
     .order("created_at");
 

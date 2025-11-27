@@ -13,6 +13,6 @@ export function formatUserName(user: UserInfo): string {
   if (user.username) {
     return user.username;
   }
-
   return user.email || user.id;
+
 }

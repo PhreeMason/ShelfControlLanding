@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,7 +14,8 @@ import {
   ChartOptions,
 } from "chart.js";
 import { useQuery } from "@tanstack/react-query";
-import { getProgressOverTime } from "@/lib/actions/admin-analytics";
+import { getProgressOverTime, getAllUsers } from "@/lib/actions/admin-analytics";
+import { UserFilter } from "./user-filter";
 
 ChartJS.register(
   CategoryScale,
@@ -30,48 +31,42 @@ type TimeRange = 7 | 14 | 21 | 30;
 
 export function ProgressOverTimeChart() {
   const [selectedDays, setSelectedDays] = useState<TimeRange>(30);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const hasInitialized = useRef(false);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const timezoneOffset = new Date().getTimezoneOffset();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["progress-over-time", timezoneOffset, selectedDays],
-    queryFn: () => getProgressOverTime(timezoneOffset, selectedDays),
+  const { data: users = [] } = useQuery({
+    queryKey: ["all-users"],
+    queryFn: getAllUsers,
   });
 
-  // Initialize selectedUsers with all users on first data load
-  useEffect(() => {
-    if (data?.datasets && !hasInitialized.current) {
-      setSelectedUsers(data.datasets.map((d) => d.label));
-      hasInitialized.current = true;
-    }
-  }, [data]);
+  const { data, isLoading } = useQuery({
+    queryKey: ["progress-over-time", timezoneOffset, selectedDays, selectedUserIds],
+    queryFn: () => getProgressOverTime(
+      timezoneOffset,
+      selectedDays,
+      selectedUserIds.length > 0 ? selectedUserIds : undefined
+    ),
+  });
 
-  const filteredDatasets = data?.datasets.filter(dataset =>
-    selectedUsers.includes(dataset.label)
-  ) || [];
-
-  const chartData = {
-    labels: data?.dates || [],
-    datasets: filteredDatasets,
-  };
-
-  const handleUserToggle = (userLabel: string) => {
-    setSelectedUsers((prev) =>
-      prev.includes(userLabel)
-        ? prev.filter((u) => u !== userLabel)
-        : [...prev, userLabel]
+  const handleUserToggle = (userId: string) => {
+    setSelectedUserIds((prev) =>
+      prev.includes(userId)
+        ? prev.filter((id) => id !== userId)
+        : [...prev, userId]
     );
   };
 
-  const selectAllUsers = () => {
-    if (data?.datasets) {
-      setSelectedUsers(data.datasets.map((d) => d.label));
-    }
+  const clearFilters = () => {
+    setSelectedUserIds([]);
   };
 
-  const clearAllUsers = () => {
-    setSelectedUsers([]);
+  const selectAllUsers = () => {
+    setSelectedUserIds(users.map((u) => u.id));
+  };
+
+  const chartData = {
+    labels: data?.dates || [],
+    datasets: data?.datasets || [],
   };
 
   const options: ChartOptions<"line"> = {
@@ -131,57 +126,24 @@ export function ProgressOverTimeChart() {
         ))}
       </div>
 
-      {data?.datasets && data.datasets.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Users:</span>
-            <button
-              onClick={selectAllUsers}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              Select All
-            </button>
-            <span className="text-muted-foreground">|</span>
-            <button
-              onClick={clearAllUsers}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              Clear All
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-            {data.datasets.map((dataset) => (
-              <button
-                key={dataset.label}
-                onClick={() => handleUserToggle(dataset.label)}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-colors ${
-                  selectedUsers.includes(dataset.label)
-                    ? "bg-secondary text-secondary-foreground"
-                    : "bg-muted/50 text-muted-foreground"
-                }`}
-              >
-                <span
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: dataset.borderColor }}
-                />
-                {dataset.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <UserFilter
+        selectedUserIds={selectedUserIds}
+        onUserToggle={handleUserToggle}
+        onClearFilters={clearFilters}
+        onSelectAll={selectAllUsers}
+      />
 
       {isLoading ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
         </div>
+      ) : selectedUserIds.length === 0 ? (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Select users to display
+        </div>
       ) : !data || data.datasets.length === 0 ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           No progress data available for the last {selectedDays} days
-        </div>
-      ) : filteredDatasets.length === 0 ? (
-        <div className="flex items-center justify-center h-64 text-muted-foreground">
-          Select users to display
         </div>
       ) : (
         <div className="h-64">
