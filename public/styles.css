@@ -449,6 +449,13 @@ p {
     font-style: italic;
 }
 
+.form-hint {
+    font-size: 13px;
+    color: var(--dark-purple);
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
 .optional-fields {
     display: flex;
     justify-content: space-between;

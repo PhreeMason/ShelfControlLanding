@@ -902,6 +902,21 @@ export type Database = {
           deadline_count: number
         }[]
       }
+      get_deadline_status_breakdown: {
+        Args: { p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
+        Returns: {
+          status: string
+          count: number
+        }[]
+      }
+      get_activity_types_over_time: {
+        Args: { p_days?: number; p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
+        Returns: {
+          activity_date: string
+          activity_type: string
+          count: number
+        }[]
+      }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
     }
     Enums: {

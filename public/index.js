@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleFormSubmission();
     animateOnLoad();
     initFAQ();
+    setupAndroidHint();
 
     const today = new Date();
 
@@ -184,6 +185,17 @@ function initFAQ() {
             item.classList.toggle('active');
         });
     });
+}
+
+function setupAndroidHint() {
+    const phoneTypeSelect = document.getElementById('phone_type');
+    const androidHint = document.getElementById('android-email-hint');
+
+    if (phoneTypeSelect && androidHint) {
+        phoneTypeSelect.addEventListener('change', (e) => {
+            androidHint.style.display = e.target.value === 'android' ? 'block' : 'none';
+        });
+    }
 }
 
 const style = document.createElement('style');

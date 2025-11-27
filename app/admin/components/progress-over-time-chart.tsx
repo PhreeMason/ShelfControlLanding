@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -30,7 +30,8 @@ type TimeRange = 7 | 14 | 21 | 30;
 
 export function ProgressOverTimeChart() {
   const [selectedDays, setSelectedDays] = useState<TimeRange>(30);
-  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const hasInitialized = useRef(false);
   const timezoneOffset = new Date().getTimezoneOffset();
 
   const { data, isLoading } = useQuery({
@@ -38,8 +39,16 @@ export function ProgressOverTimeChart() {
     queryFn: () => getProgressOverTime(timezoneOffset, selectedDays),
   });
 
+  // Initialize selectedUsers with all users on first data load
+  useEffect(() => {
+    if (data?.datasets && !hasInitialized.current) {
+      setSelectedUsers(data.datasets.map((d) => d.label));
+      hasInitialized.current = true;
+    }
+  }, [data]);
+
   const filteredDatasets = data?.datasets.filter(dataset =>
-    selectedUsers.has(dataset.label)
+    selectedUsers.includes(dataset.label)
   ) || [];
 
   const chartData = {
@@ -47,16 +56,22 @@ export function ProgressOverTimeChart() {
     datasets: filteredDatasets,
   };
 
-  const toggleUser = (userLabel: string) => {
-    setSelectedUsers(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(userLabel)) {
-        newSet.delete(userLabel);
-      } else {
-        newSet.add(userLabel);
-      }
-      return newSet;
-    });
+  const handleUserToggle = (userLabel: string) => {
+    setSelectedUsers((prev) =>
+      prev.includes(userLabel)
+        ? prev.filter((u) => u !== userLabel)
+        : [...prev, userLabel]
+    );
+  };
+
+  const selectAllUsers = () => {
+    if (data?.datasets) {
+      setSelectedUsers(data.datasets.map((d) => d.label));
+    }
+  };
+
+  const clearAllUsers = () => {
+    setSelectedUsers([]);
   };
 
   const options: ChartOptions<"line"> = {
@@ -64,12 +79,7 @@ export function ProgressOverTimeChart() {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top" as const,
-        display: true,
-      },
-      title: {
-        display: true,
-        text: "Pages Read Per Day by User",
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -121,6 +131,46 @@ export function ProgressOverTimeChart() {
         ))}
       </div>
 
+      {data?.datasets && data.datasets.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Users:</span>
+            <button
+              onClick={selectAllUsers}
+              className="text-xs text-muted-foreground hover:text-foreground"
+            >
+              Select All
+            </button>
+            <span className="text-muted-foreground">|</span>
+            <button
+              onClick={clearAllUsers}
+              className="text-xs text-muted-foreground hover:text-foreground"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+            {data.datasets.map((dataset) => (
+              <button
+                key={dataset.label}
+                onClick={() => handleUserToggle(dataset.label)}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-colors ${
+                  selectedUsers.includes(dataset.label)
+                    ? "bg-secondary text-secondary-foreground"
+                    : "bg-muted/50 text-muted-foreground"
+                }`}
+              >
+                <span
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: dataset.borderColor }}
+                />
+                {dataset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
@@ -129,37 +179,14 @@ export function ProgressOverTimeChart() {
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           No progress data available for the last {selectedDays} days
         </div>
+      ) : filteredDatasets.length === 0 ? (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Select users to display
+        </div>
       ) : (
-        <>
-          <div className="h-64">
-            <Line data={chartData} options={options} />
-          </div>
-
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-foreground">Filter by User:</h4>
-            <div className="flex flex-wrap gap-3">
-              {data.datasets.map((dataset, index) => (
-                <label
-                  key={`${dataset.label}-${index}`}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.has(dataset.label)}
-                    onChange={() => toggleUser(dataset.label)}
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
-                  />
-                  <span
-                    className="text-sm"
-                    style={{ color: dataset.borderColor }}
-                  >
-                    {dataset.label}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </>
+        <div className="h-64">
+          <Line data={chartData} options={options} />
+        </div>
       )}
     </div>
   );

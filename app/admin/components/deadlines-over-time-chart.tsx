@@ -1,54 +1,76 @@
 "use client";
 
 import { useState } from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
   ChartOptions,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useQuery } from "@tanstack/react-query";
-import { getOverdueDeadlines } from "@/lib/actions/admin-analytics";
+import { getDeadlinesByStatus } from "@/lib/actions/admin-analytics";
 import { UserFilter } from "./user-filter";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-export function DeadlinesOverTimeChart() {
+const STATUS_COLORS: Record<string, string> = {
+  overdue: "rgba(239, 68, 68, 0.8)",
+  pending: "rgba(234, 179, 8, 0.8)",
+  reading: "rgba(59, 130, 246, 0.8)",
+  paused: "rgba(156, 163, 175, 0.8)",
+  to_review: "rgba(168, 85, 247, 0.8)",
+  complete: "rgba(34, 197, 94, 0.8)",
+  rejected: "rgba(239, 68, 68, 0.6)",
+  withdrew: "rgba(107, 114, 128, 0.8)",
+  did_not_finish: "rgba(249, 115, 22, 0.8)",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  overdue: "Overdue",
+  pending: "Pending",
+  reading: "Reading",
+  paused: "Paused",
+  to_review: "To Review",
+  complete: "Complete",
+  rejected: "Rejected",
+  withdrew: "Withdrew",
+  did_not_finish: "Did Not Finish",
+};
+
+export function DeadlineStatusChart() {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
-  const { data: deadlinesData = [], isLoading } = useQuery({
-    queryKey: ["overdue-deadlines", selectedUserIds],
-    queryFn: () => getOverdueDeadlines(selectedUserIds.length > 0 ? selectedUserIds : undefined),
+  const { data: statusData = [], isLoading } = useQuery({
+    queryKey: ["deadline-status-breakdown", selectedUserIds],
+    queryFn: () => getDeadlinesByStatus(selectedUserIds.length > 0 ? selectedUserIds : undefined),
   });
 
   const chartData = {
-    labels: deadlinesData.map((item) => item.date),
+    labels: statusData.map((item) => STATUS_LABELS[item.status] || item.status),
     datasets: [
       {
-        label: "Overdue Deadlines",
-        data: deadlinesData.map((item) => item.count),
-        borderColor: "rgba(239, 68, 68, 1)",
-        backgroundColor: "rgba(239, 68, 68, 0.2)",
-        tension: 0.1,
+        label: "Deadlines",
+        data: statusData.map((item) => item.count),
+        backgroundColor: statusData.map((item) => STATUS_COLORS[item.status] || "rgba(156, 163, 175, 0.8)"),
+        borderWidth: 0,
       },
     ],
   };
 
-  const options: ChartOptions<"line"> = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -57,7 +79,17 @@ export function DeadlinesOverTimeChart() {
       },
       title: {
         display: true,
-        text: "Overdue Deadlines",
+        text: "Deadlines by Status",
+      },
+      datalabels: {
+        anchor: "end",
+        align: "end",
+        color: "hsl(var(--foreground))",
+        font: {
+          weight: "bold",
+          size: 12,
+        },
+        formatter: (value: number) => (value > 0 ? value : ""),
       },
     },
     scales: {
@@ -94,15 +126,18 @@ export function DeadlinesOverTimeChart() {
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
         </div>
-      ) : deadlinesData.length === 0 ? (
+      ) : statusData.length === 0 ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
-          No overdue deadlines
+          No deadlines found
         </div>
       ) : (
         <div className="h-64">
-          <Line data={chartData} options={options} />
+          <Bar data={chartData} options={options} plugins={[ChartDataLabels]} />
         </div>
       )}
     </div>
   );
 }
+
+// Keep old export name for backwards compatibility
+export { DeadlineStatusChart as DeadlinesOverTimeChart };
