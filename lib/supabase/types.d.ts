@@ -911,6 +911,7 @@ export type Database = {
           last_name: string
           user_id: string
           username: string
+          yesterday_rank: number
         }[]
       }
       get_reading_notes_csv: {
@@ -970,6 +971,7 @@ export type Database = {
           cover_image_url: string
           deadline_count: number
           title: string
+          yesterday_rank: number
         }[]
       }
       get_top_deadline_users: {
@@ -982,11 +984,16 @@ export type Database = {
           last_name: string
           user_id: string
           username: string
+          yesterday_rank: number
         }[]
       }
       get_top_pages_read_today:
         | {
-            Args: { p_exclude_user_ids?: string[]; p_limit?: number }
+            Args: {
+              p_exclude_user_ids?: string[]
+              p_limit?: number
+              p_tz?: string
+            }
             Returns: {
               avatar_url: string
               email: string
@@ -995,14 +1002,11 @@ export type Database = {
               pages_read: number
               user_id: string
               username: string
+              yesterday_rank: number
             }[]
           }
         | {
-            Args: {
-              p_exclude_user_ids?: string[]
-              p_limit?: number
-              p_tz?: string
-            }
+            Args: { p_exclude_user_ids?: string[]; p_limit?: number }
             Returns: {
               avatar_url: string
               email: string
