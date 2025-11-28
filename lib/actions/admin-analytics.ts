@@ -48,7 +48,7 @@ export async function getActivityTypesOverTime(
 
   const { data, error } = await supabase.rpc("get_activity_types_over_time", {
     p_days: days,
-    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_user_ids: userIds && userIds.length > 0 ? userIds : undefined,
     p_exclude_user_ids: TEST_USER_IDS,
   });
 
@@ -190,7 +190,7 @@ export async function getDeadlinesByStatus(
   const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc("get_deadline_status_breakdown", {
-    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_user_ids: userIds && userIds.length > 0 ? userIds : undefined,
     p_exclude_user_ids: TEST_USER_IDS,
   });
 
@@ -281,7 +281,7 @@ export async function getFormatDistribution(
   const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc("get_format_distribution", {
-    p_user_ids: userIds && userIds.length > 0 ? userIds : null,
+    p_user_ids: userIds && userIds.length > 0 ? userIds : undefined,
     p_exclude_user_ids: TEST_USER_IDS,
   });
 
