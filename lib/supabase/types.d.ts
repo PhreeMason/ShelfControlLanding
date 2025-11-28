@@ -609,7 +609,7 @@ export type Database = {
           id: string
           last_name: string | null
           onboarding_complete: boolean | null
-          role: Database["public"]["Enums"]["user_role"] | null
+          role: Database["public"]["Enums"]["user_role_enum"] | null
           updated_at: string | null
           username: string | null
           website: string | null
@@ -622,7 +622,7 @@ export type Database = {
           id: string
           last_name?: string | null
           onboarding_complete?: boolean | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role_enum"] | null
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -635,7 +635,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           onboarding_complete?: boolean | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role_enum"] | null
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -832,6 +832,18 @@ export type Database = {
     }
     Functions: {
       generate_prefixed_id: { Args: { prefix: string }; Returns: string }
+      get_activity_types_over_time: {
+        Args: {
+          p_days?: number
+          p_exclude_user_ids?: string[]
+          p_user_ids?: string[]
+        }
+        Returns: {
+          activity_date: string
+          activity_type: string
+          count: number
+        }[]
+      }
       get_daily_activities: {
         Args: { p_end_date: string; p_start_date: string; p_user_id: string }
         Returns: {
@@ -841,6 +853,20 @@ export type Database = {
           book_title: string
           deadline_id: string
           metadata: Json
+        }[]
+      }
+      get_deadline_status_breakdown: {
+        Args: { p_exclude_user_ids?: string[]; p_user_ids?: string[] }
+        Returns: {
+          count: number
+          status: string
+        }[]
+      }
+      get_format_distribution: {
+        Args: { p_exclude_user_ids?: string[]; p_user_ids?: string[] }
+        Returns: {
+          count: number
+          format: string
         }[]
       }
       get_reading_notes_csv: {
@@ -897,31 +923,36 @@ export type Database = {
         Args: { p_limit?: number }
         Returns: {
           book_id: string
-          title: string
-          cover_image_url: string | null
+          cover_image_url: string
           deadline_count: number
+          title: string
         }[]
       }
-      get_deadline_status_breakdown: {
-        Args: { p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
+      get_top_deadline_users: {
+        Args: { p_limit?: number }
         Returns: {
-          status: string
-          count: number
+          avatar_url: string
+          deadline_count: number
+          email: string
+          first_name: string
+          last_name: string
+          user_id: string
+          username: string
         }[]
       }
-      get_activity_types_over_time: {
-        Args: { p_days?: number; p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
+      get_top_pages_read_today: {
+        Args: {
+          p_limit?: number
+          p_exclude_user_ids?: string[]
+        }
         Returns: {
-          activity_date: string
-          activity_type: string
-          count: number
-        }[]
-      }
-      get_format_distribution: {
-        Args: { p_user_ids?: string[] | null; p_exclude_user_ids?: string[] | null }
-        Returns: {
-          format: string
-          count: number
+          user_id: string
+          email: string
+          username: string
+          first_name: string
+          last_name: string
+          avatar_url: string
+          pages_read: number
         }[]
       }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
@@ -938,7 +969,7 @@ export type Database = {
         | "rejected"
         | "withdrew"
         | "did_not_finish"
-      user_role: "user" | "admin" | "super-admin"
+      user_role_enum: "user" | "admin" | "super-admin" | "alpha" | "beta"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1078,7 +1109,7 @@ export const Constants = {
         "withdrew",
         "did_not_finish",
       ],
-      user_role: ["user", "admin", "super-admin"],
+      user_role_enum: ["user", "admin", "super-admin", "alpha", "beta"],
     },
   },
 } as const

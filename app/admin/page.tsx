@@ -5,6 +5,7 @@ import { DeadlinesOverTimeChart } from "./components/deadlines-over-time-chart";
 import { FormatDistributionChart } from "./components/format-distribution-chart";
 import { ProgressOverTimeChart } from "./components/progress-over-time-chart";
 import { TopBooksChart } from "./components/top-books-chart";
+import { TopUsersChart } from "./components/top-users-chart";
 
 export default function AdminDashboard() {
   return (
@@ -22,15 +23,17 @@ export default function AdminDashboard() {
             <h2 className="text-2xl font-semibold mb-4">Top Books</h2>
             <TopBooksChart />
           </div>
-          <div className="space-y-6">
-            <div className="rounded-lg border p-6">
-              <h2 className="text-2xl font-semibold mb-4">Book Format Distribution</h2>
-              <FormatDistributionChart />
-            </div>
-            <div className="rounded-lg border p-6">
-              <h2 className="text-2xl font-semibold mb-4">Activity Types Over Time</h2>
-              <ActivityTypesChart />
-            </div>
+          <div className="rounded-lg border p-6">
+            <h2 className="text-2xl font-semibold mb-4">Top Users by Deadlines</h2>
+            <TopUsersChart />
+          </div>
+          <div className="rounded-lg border p-6">
+            <h2 className="text-2xl font-semibold mb-4">Book Format Distribution</h2>
+            <FormatDistributionChart />
+          </div>
+          <div className="rounded-lg border p-6">
+            <h2 className="text-2xl font-semibold mb-4">Activity Types Over Time</h2>
+            <ActivityTypesChart />
           </div>
 
           <div className="rounded-lg border p-6 lg:col-span-2">

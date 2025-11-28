@@ -236,6 +236,45 @@ export async function getTopBooks(limit: number = 10): Promise<TopBookData[]> {
   return data;
 }
 
+export interface TopDeadlineUserData {
+  user_id: string;
+  email: string | null;
+  username: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  deadline_count: number;
+}
+
+export async function getTopDeadlineUsers(
+  limit: number = 10
+): Promise<TopDeadlineUserData[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_top_deadline_users", {
+    p_limit: limit,
+  });
+
+  if (error || !data) {
+    return [];
+  }
+
+  // Generate signed URLs for avatars
+  const usersWithAvatars = await Promise.all(
+    data.map(async (user) => {
+      if (user.avatar_url) {
+        const { data: signedData } = await supabase.storage
+          .from("avatars")
+          .createSignedUrl(user.avatar_url, 60 * 60); // 1 hour
+        return { ...user, avatar_url: signedData?.signedUrl || null };
+      }
+      return user;
+    })
+  );
+
+  return usersWithAvatars;
+}
+
 export async function getFormatDistribution(
   userIds?: string[]
 ): Promise<FormatDistributionData[]> {
@@ -304,11 +343,12 @@ export async function getProgressOverTime(
       current_progress,
       ignore_in_calcs,
       created_at,
-      deadlines!inner(user_id, profiles!inner(username, email, first_name, last_name))
+      deadlines!inner(user_id, format, profiles!inner(username, email, first_name, last_name))
     `
     )
     .gte("created_at", daysAgoStr)
-    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`);
+    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`)
+    .in("deadlines.format", ["physical", "eBook"]);
 
   if (userIds && userIds.length > 0) {
     query = query.in("deadlines.user_id", userIds);
