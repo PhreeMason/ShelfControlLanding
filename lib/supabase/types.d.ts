@@ -826,6 +826,38 @@ export type Database = {
           },
         ]
       }
+      user_settings: {
+        Row: {
+          created_at: string | null
+          id: string
+          preferences: Json
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          preferences?: Json
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          preferences?: Json
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -867,6 +899,18 @@ export type Database = {
         Returns: {
           count: number
           format: string
+        }[]
+      }
+      get_most_active_users_today: {
+        Args: { p_exclude_user_ids?: string[]; p_limit?: number; p_tz?: string }
+        Returns: {
+          activity_count: number
+          avatar_url: string
+          email: string
+          first_name: string
+          last_name: string
+          user_id: string
+          username: string
         }[]
       }
       get_reading_notes_csv: {
@@ -940,21 +984,47 @@ export type Database = {
           username: string
         }[]
       }
-      get_top_pages_read_today: {
-        Args: {
-          p_limit?: number
-          p_exclude_user_ids?: string[]
-        }
-        Returns: {
-          user_id: string
-          email: string
-          username: string
-          first_name: string
-          last_name: string
-          avatar_url: string
-          pages_read: number
-        }[]
-      }
+      get_top_pages_read_today:
+        | {
+            Args: { p_exclude_user_ids?: string[]; p_limit?: number }
+            Returns: {
+              avatar_url: string
+              email: string
+              first_name: string
+              last_name: string
+              pages_read: number
+              user_id: string
+              username: string
+            }[]
+          }
+        | {
+            Args: {
+              p_exclude_user_ids?: string[]
+              p_limit?: number
+              p_tz?: string
+            }
+            Returns: {
+              avatar_url: string
+              email: string
+              first_name: string
+              last_name: string
+              pages_read: number
+              user_id: string
+              username: string
+            }[]
+          }
+        | {
+            Args: { p_exclude_user_ids?: string[]; p_limit?: number }
+            Returns: {
+              avatar_url: string
+              email: string
+              first_name: string
+              last_name: string
+              pages_read: number
+              user_id: string
+              username: string
+            }[]
+          }
       store_book_with_authors: { Args: { book_data: Json }; Returns: string }
     }
     Enums: {

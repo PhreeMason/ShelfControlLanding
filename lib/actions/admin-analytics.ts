@@ -246,6 +246,16 @@ export interface TopDeadlineUserData {
   deadline_count: number;
 }
 
+export interface TopPagesReadUserData {
+  user_id: string;
+  email: string | null;
+  username: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  pages_read: number;
+}
+
 export async function getTopDeadlineUsers(
   limit: number = 10
 ): Promise<TopDeadlineUserData[]> {
@@ -253,6 +263,80 @@ export async function getTopDeadlineUsers(
 
   const { data, error } = await supabase.rpc("get_top_deadline_users", {
     p_limit: limit,
+  });
+
+  if (error || !data) {
+    return [];
+  }
+
+  // Generate signed URLs for avatars
+  const usersWithAvatars = await Promise.all(
+    data.map(async (user) => {
+      if (user.avatar_url) {
+        const { data: signedData } = await supabase.storage
+          .from("avatars")
+          .createSignedUrl(user.avatar_url, 60 * 60); // 1 hour
+        return { ...user, avatar_url: signedData?.signedUrl || null };
+      }
+      return user;
+    })
+  );
+
+  return usersWithAvatars;
+}
+
+export async function getTopPagesReadToday(
+  limit: number = 10,
+  timezone: string = "UTC"
+): Promise<TopPagesReadUserData[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_top_pages_read_today", {
+    p_limit: limit,
+    p_exclude_user_ids: TEST_USER_IDS,
+    p_tz: timezone,
+  });
+
+  if (error || !data) {
+    return [];
+  }
+
+  // Generate signed URLs for avatars
+  const usersWithAvatars = await Promise.all(
+    data.map(async (user) => {
+      if (user.avatar_url) {
+        const { data: signedData } = await supabase.storage
+          .from("avatars")
+          .createSignedUrl(user.avatar_url, 60 * 60); // 1 hour
+        return { ...user, avatar_url: signedData?.signedUrl || null };
+      }
+      return user;
+    })
+  );
+
+  return usersWithAvatars;
+}
+
+export interface MostActiveUserData {
+  user_id: string;
+  email: string | null;
+  username: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  activity_count: number;
+}
+
+export async function getMostActiveUsersToday(
+  limit: number = 10,
+  timezone: string = "UTC"
+): Promise<MostActiveUserData[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_most_active_users_today", {
+    p_limit: limit,
+    p_exclude_user_ids: TEST_USER_IDS,
+    p_tz: timezone,
   });
 
   if (error || !data) {
