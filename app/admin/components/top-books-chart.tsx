@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTopBooks } from "@/lib/actions/admin-analytics";
 import { Book } from "lucide-react";
 import Image from "next/image";
+import { RankChangeIndicator } from "./rank-change-indicator";
 
 export function TopBooksChart() {
   const { data, isLoading } = useQuery({
@@ -37,6 +38,13 @@ export function TopBooksChart() {
           <span className="text-muted-foreground font-medium w-6 text-right">
             {index + 1}
           </span>
+
+          <div className="w-12 flex justify-center">
+            <RankChangeIndicator
+              currentRank={index + 1}
+              yesterdayRank={book.yesterday_rank}
+            />
+          </div>
 
           <div className="relative w-10 h-[60px] flex-shrink-0 rounded overflow-hidden bg-muted">
             {book.cover_image_url ? (

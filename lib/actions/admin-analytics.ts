@@ -217,6 +217,7 @@ export interface TopBookData {
   title: string;
   cover_image_url: string | null;
   deadline_count: number;
+  yesterday_rank?: number | null;
 }
 
 export interface FormatDistributionData {
@@ -244,6 +245,7 @@ export interface TopDeadlineUserData {
   last_name: string | null;
   avatar_url: string | null;
   deadline_count: number;
+  yesterday_rank?: number | null;
 }
 
 export interface TopPagesReadUserData {
@@ -254,6 +256,7 @@ export interface TopPagesReadUserData {
   last_name: string | null;
   avatar_url: string | null;
   pages_read: number;
+  yesterday_rank?: number | null;
 }
 
 export async function getTopDeadlineUsers(
@@ -325,6 +328,7 @@ export interface MostActiveUserData {
   last_name: string | null;
   avatar_url: string | null;
   activity_count: number;
+  yesterday_rank?: number | null;
 }
 
 export async function getMostActiveUsersToday(

@@ -7,6 +7,7 @@ import {
 } from "@/lib/actions/admin-analytics";
 import { User } from "lucide-react";
 import Image from "next/image";
+import { RankChangeIndicator } from "./rank-change-indicator";
 
 function formatUserDisplayName(user: TopPagesReadUserData): string {
   const fullName = [user.first_name, user.last_name]
@@ -59,6 +60,13 @@ export function TopPagesReadChart() {
           <span className="text-muted-foreground font-medium w-6 text-right">
             {index + 1}
           </span>
+
+          <div className="w-12 flex justify-center">
+            <RankChangeIndicator
+              currentRank={index + 1}
+              yesterdayRank={user.yesterday_rank}
+            />
+          </div>
 
           <div className="relative w-10 h-10 flex-shrink-0 rounded-full overflow-hidden bg-muted">
             {user.avatar_url ? (
