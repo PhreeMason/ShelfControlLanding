@@ -1,0 +1,7 @@
+# Robots.txt for ShelfControl
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://shelfcontrol.app/sitemap.xml
