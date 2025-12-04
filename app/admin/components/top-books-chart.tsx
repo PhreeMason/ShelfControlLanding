@@ -64,6 +64,9 @@ export function TopBooksChart() {
 
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{book.title}</p>
+            {book.publication_date && (
+              <p className="text-xs text-muted-foreground">{book.publication_date}</p>
+            )}
           </div>
 
           <div className="flex-shrink-0">

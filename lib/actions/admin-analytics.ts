@@ -216,6 +216,7 @@ export interface TopBookData {
   book_id: string;
   title: string;
   cover_image_url: string | null;
+  publication_date: string | null;
   deadline_count: number;
   yesterday_rank?: number | null;
 }
@@ -411,6 +412,122 @@ interface DeadlineProgressQueryResult {
 export interface ProfilesCreatedOverTimeData {
   dates: string[];
   counts: number[];
+}
+
+export interface ActiveOverduePageCountData {
+  dates: string[];
+  activePages: number[];
+  overduePages: number[];
+}
+
+export async function getActiveOverduePageCounts(
+  days: number = 30
+): Promise<ActiveOverduePageCountData> {
+  const supabase = createAdminClient();
+
+  // Build date range
+  const dateRange: string[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    dateRange.push(date.toISOString().split("T")[0]);
+  }
+
+  // Fetch all deadlines with their status
+  // Only physical and eBook formats (not audio)
+  const { data: deadlines, error } = await supabase
+    .from("deadlines")
+    .select(`
+      id,
+      deadline_date,
+      created_at,
+      finished_at,
+      format,
+      total_quantity,
+      deadline_status(status)
+    `)
+    .in("format", ["physical", "eBook"])
+    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`);
+
+  if (error || !deadlines) {
+    return { dates: [], activePages: [], overduePages: [] };
+  }
+
+  // For each day, calculate total pages of active and overdue books
+  const activePages: number[] = [];
+  const overduePages: number[] = [];
+
+  const completedStatuses = [
+    "complete",
+    "rejected",
+    "withdrew",
+    "did_not_finish",
+  ];
+
+  dateRange.forEach((dateStr) => {
+    const currentDate = new Date(dateStr);
+    currentDate.setHours(23, 59, 59, 999);
+
+    let activePagesTotal = 0;
+    let overduePagesTotal = 0;
+
+    deadlines.forEach((deadline) => {
+      const totalPages = deadline.total_quantity || 0;
+      const createdAt = new Date(deadline.created_at);
+      const deadlineDate = new Date(deadline.deadline_date);
+      const finishedAt = deadline.finished_at
+        ? new Date(deadline.finished_at)
+        : null;
+
+      // Get status from the joined deadline_status (can be array or single object)
+      const statusData = deadline.deadline_status as
+        | { status: string | null }[]
+        | { status: string | null }
+        | null;
+      const status = Array.isArray(statusData)
+        ? statusData[0]?.status || "pending"
+        : statusData?.status || "pending";
+
+      // Check if deadline existed on this date
+      if (createdAt > currentDate) return;
+
+      // Check if deadline was already finished before this date
+      if (finishedAt && finishedAt < currentDate) return;
+
+      // If completed statuses, skip (we only want active/overdue)
+      if (completedStatuses.includes(status)) return;
+
+      // Check if overdue on this date (deadline passed but still reading)
+      const isOverdue = deadlineDate < currentDate && status === "reading";
+
+      // Check if active on this date (reading status, not overdue)
+      const isActive = status === "reading" && !isOverdue;
+
+      if (isActive) {
+        activePagesTotal += totalPages;
+      } else if (isOverdue) {
+        overduePagesTotal += totalPages;
+      }
+    });
+
+    activePages.push(activePagesTotal);
+    overduePages.push(overduePagesTotal);
+  });
+
+  // Format dates for display
+  const formattedDates = dateRange.map((date) => {
+    const [, month, day] = date.split("-");
+    return `${parseInt(month)}/${parseInt(day)}`;
+  });
+
+  return {
+    dates: formattedDates,
+    activePages,
+    overduePages,
+  };
 }
 
 export async function getProfilesCreatedOverTime(
