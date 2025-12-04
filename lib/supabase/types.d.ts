@@ -1005,6 +1005,17 @@ export type Database = {
                     count: number
                 }[]
             }
+            get_active_overdue_remaining_pages: {
+                Args: {
+                    p_days?: number
+                    p_exclude_user_ids?: string[]
+                }
+                Returns: {
+                    report_date: string
+                    active_remaining_pages: number
+                    overdue_remaining_pages: number
+                }[]
+            }
             get_daily_activities: {
                 Args: { p_end_date: string; p_start_date: string; p_user_id: string }
                 Returns: {
@@ -1048,6 +1059,23 @@ export type Database = {
                 Returns: {
                     count: number
                     profile_date: string
+                }[]
+            }
+            get_progress_over_time: {
+                Args: {
+                    p_days?: number
+                    p_user_ids?: string[]
+                    p_exclude_user_ids?: string[]
+                    p_offset_minutes?: number
+                }
+                Returns: {
+                    user_id: string
+                    email: string
+                    username: string
+                    first_name: string
+                    last_name: string
+                    progress_date: string
+                    pages_read: number
                 }[]
             }
             get_reading_notes_csv: {

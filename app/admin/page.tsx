@@ -1,5 +1,6 @@
 "use client";
 
+import { ActiveOverduePageCountChart } from "./components/active-overdue-page-count-chart";
 import { ActivityTypesChart } from "./components/activity-types-chart";
 import { DeadlinesOverTimeChart } from "./components/deadlines-over-time-chart";
 import { FormatDistributionChart } from "./components/format-distribution-chart";
@@ -54,6 +55,11 @@ export default function AdminDashboard() {
           <div className="rounded-lg border p-6 lg:col-span-2">
             <h2 className="text-2xl font-semibold mb-4">Deadlines by Status</h2>
             <DeadlinesOverTimeChart />
+          </div>
+
+          <div className="rounded-lg border p-6 lg:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Pages Remaining (Active & Overdue)</h2>
+            <ActiveOverduePageCountChart />
           </div>
 
           <div className="rounded-lg border p-6 lg:col-span-2">

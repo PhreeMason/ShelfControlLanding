@@ -381,34 +381,6 @@ export async function getFormatDistribution(
   return data;
 }
 
-interface ProgressRecord {
-  deadline_id: string;
-  user_id: string;
-  username: string | null;
-  email: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  date: string;
-  current_progress: number;
-  ignore_in_calcs: boolean;
-}
-
-interface DeadlineProgressQueryResult {
-  deadline_id: string;
-  current_progress: number;
-  ignore_in_calcs: boolean;
-  created_at: string;
-  deadlines: {
-    user_id: string;
-    profiles: {
-      username: string | null;
-      email: string | null;
-      first_name: string | null;
-      last_name: string | null;
-    };
-  };
-}
-
 export interface ProfilesCreatedOverTimeData {
   dates: string[];
   counts: number[];
@@ -425,97 +397,37 @@ export async function getActiveOverduePageCounts(
 ): Promise<ActiveOverduePageCountData> {
   const supabase = createAdminClient();
 
-  // Build date range
-  const dateRange: string[] = [];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const { data, error } = await supabase.rpc(
+    "get_active_overdue_remaining_pages",
+    {
+      p_days: days,
+      p_exclude_user_ids: TEST_USER_IDS,
+    }
+  );
 
+  if (error || !data || data.length === 0) {
+    return { dates: [], activePages: [], overduePages: [] };
+  }
+
+  // Build complete date range to fill in gaps
+  const dateRange: string[] = [];
   for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(today);
+    const date = new Date();
     date.setDate(date.getDate() - i);
     dateRange.push(date.toISOString().split("T")[0]);
   }
 
-  // Fetch all deadlines with their status
-  // Only physical and eBook formats (not audio)
-  const { data: deadlines, error } = await supabase
-    .from("deadlines")
-    .select(`
-      id,
-      deadline_date,
-      created_at,
-      finished_at,
-      format,
-      total_quantity,
-      deadline_status(status)
-    `)
-    .in("format", ["physical", "eBook"])
-    .not("user_id", "in", `(${TEST_USER_IDS.join(",")})`);
-
-  if (error || !deadlines) {
-    return { dates: [], activePages: [], overduePages: [] };
-  }
-
-  // For each day, calculate total pages of active and overdue books
-  const activePages: number[] = [];
-  const overduePages: number[] = [];
-
-  const completedStatuses = [
-    "complete",
-    "rejected",
-    "withdrew",
-    "did_not_finish",
-  ];
-
-  dateRange.forEach((dateStr) => {
-    const currentDate = new Date(dateStr);
-    currentDate.setHours(23, 59, 59, 999);
-
-    let activePagesTotal = 0;
-    let overduePagesTotal = 0;
-
-    deadlines.forEach((deadline) => {
-      const totalPages = deadline.total_quantity || 0;
-      const createdAt = new Date(deadline.created_at);
-      const deadlineDate = new Date(deadline.deadline_date);
-      const finishedAt = deadline.finished_at
-        ? new Date(deadline.finished_at)
-        : null;
-
-      // Get status from the joined deadline_status (can be array or single object)
-      const statusData = deadline.deadline_status as
-        | { status: string | null }[]
-        | { status: string | null }
-        | null;
-      const status = Array.isArray(statusData)
-        ? statusData[0]?.status || "pending"
-        : statusData?.status || "pending";
-
-      // Check if deadline existed on this date
-      if (createdAt > currentDate) return;
-
-      // Check if deadline was already finished before this date
-      if (finishedAt && finishedAt < currentDate) return;
-
-      // If completed statuses, skip (we only want active/overdue)
-      if (completedStatuses.includes(status)) return;
-
-      // Check if overdue on this date (deadline passed but still reading)
-      const isOverdue = deadlineDate < currentDate && status === "reading";
-
-      // Check if active on this date (reading status, not overdue)
-      const isActive = status === "reading" && !isOverdue;
-
-      if (isActive) {
-        activePagesTotal += totalPages;
-      } else if (isOverdue) {
-        overduePagesTotal += totalPages;
-      }
-    });
-
-    activePages.push(activePagesTotal);
-    overduePages.push(overduePagesTotal);
+  // Create maps from the RPC results
+  const activeByDate = new Map<string, number>();
+  const overdueByDate = new Map<string, number>();
+  data.forEach((row: { report_date: string; active_remaining_pages: number; overdue_remaining_pages: number }) => {
+    activeByDate.set(row.report_date, row.active_remaining_pages);
+    overdueByDate.set(row.report_date, row.overdue_remaining_pages);
   });
+
+  // Build arrays, filling in 0 for missing dates
+  const activePages = dateRange.map((date) => activeByDate.get(date) || 0);
+  const overduePages = dateRange.map((date) => overdueByDate.get(date) || 0);
 
   // Format dates for display
   const formattedDates = dateRange.map((date) => {
@@ -581,59 +493,18 @@ export async function getProgressOverTime(
 
   const offsetMinutes = timezoneOffsetMinutes ?? 0;
 
-  const nowLocal = new Date(Date.now() - offsetMinutes * 60 * 1000);
-  const daysAgo = new Date(nowLocal);
-  daysAgo.setDate(daysAgo.getDate() - days);
-  daysAgo.setHours(0, 0, 0, 0);
-  const daysAgoStr = daysAgo.toISOString();
-
-  let query = supabase
-    .from("deadline_progress")
-    .select(
-      `
-      deadline_id,
-      current_progress,
-      ignore_in_calcs,
-      created_at,
-      deadlines!inner(user_id, format, profiles!inner(username, email, first_name, last_name))
-    `
-    )
-    .gte("created_at", daysAgoStr)
-    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`)
-    .in("deadlines.format", ["physical", "eBook"]);
-
-  if (userIds && userIds.length > 0) {
-    query = query.in("deadlines.user_id", userIds);
-  }
-
-  const { data, error } = await query
-    .order("deadline_id")
-    .order("created_at");
-
-  if (error) {
-    return { dates: [], datasets: [] };
-  }
-
-  if (!data || data.length === 0) {
-    return { dates: [], datasets: [] };
-  }
-
-  const records: ProgressRecord[] = (data as DeadlineProgressQueryResult[]).map((record) => {
-    const utcDate = new Date(record.created_at);
-    const localDate = new Date(utcDate.getTime() - offsetMinutes * 60 * 1000);
-    return {
-      deadline_id: record.deadline_id,
-      user_id: record.deadlines.user_id,
-      email: record.deadlines.profiles.email,
-      username: record.deadlines.profiles.username,
-      first_name: record.deadlines.profiles.first_name,
-      last_name: record.deadlines.profiles.last_name,
-      date: localDate.toISOString().split("T")[0],
-      current_progress: record.current_progress,
-      ignore_in_calcs: record.ignore_in_calcs,
-    };
+  const { data, error } = await supabase.rpc("get_progress_over_time", {
+    p_days: days,
+    p_user_ids: userIds && userIds.length > 0 ? userIds : undefined,
+    p_exclude_user_ids: TEST_USER_IDS,
+    p_offset_minutes: offsetMinutes,
   });
 
+  if (error || !data || data.length === 0) {
+    return { dates: [], datasets: [] };
+  }
+
+  // Build complete date range to fill in gaps
   const dateRange: string[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(Date.now() - offsetMinutes * 60 * 1000);
@@ -641,68 +512,22 @@ export async function getProgressOverTime(
     dateRange.push(date.toISOString().split("T")[0]);
   }
 
-  const deadlineMaxByDate = new Map<string, Map<string, number>>();
-
-  records.forEach((record) => {
-    if (!deadlineMaxByDate.has(record.deadline_id)) {
-      deadlineMaxByDate.set(record.deadline_id, new Map());
-    }
-    const dateMap = deadlineMaxByDate.get(record.deadline_id)!;
-    const currentMax = dateMap.get(record.date) || 0;
-    dateMap.set(record.date, Math.max(currentMax, record.current_progress));
-  });
-
-  const ignoreRecordsByDeadline = new Map<string, Set<string>>();
-  records.forEach((record) => {
-    if (record.ignore_in_calcs) {
-      if (!ignoreRecordsByDeadline.has(record.deadline_id)) {
-        ignoreRecordsByDeadline.set(record.deadline_id, new Set());
-      }
-      ignoreRecordsByDeadline.get(record.deadline_id)!.add(record.date);
-    }
-  });
-
+  // Group results by user
   const userPagesPerDay = new Map<string, Map<string, number>>();
   const userInfoMap = new Map<string, UserInfo>();
 
-  deadlineMaxByDate.forEach((dateMap, deadlineId) => {
-    const sortedDates = Array.from(dateMap.keys()).sort();
-    let previousProgress = 0;
-
-    sortedDates.forEach((date) => {
-      const currentProgress = dateMap.get(date)!;
-      const isIgnored = ignoreRecordsByDeadline.get(deadlineId)?.has(date);
-
-      const record = records.find((r) => r.deadline_id === deadlineId && r.date === date);
-
-      if (record) {
-        const userId = record.user_id;
-
-        if (!userPagesPerDay.has(userId)) {
-          userPagesPerDay.set(userId, new Map());
-        }
-
-        if (!userInfoMap.has(userId)) {
-          userInfoMap.set(userId, {
-            id: userId,
-            email: record.email,
-            username: record.username,
-            first_name: record.first_name,
-            last_name: record.last_name,
-          });
-        }
-
-        if (!isIgnored) {
-          const pagesRead = currentProgress - previousProgress;
-
-          const userDateMap = userPagesPerDay.get(userId)!;
-          const currentTotal = userDateMap.get(date) || 0;
-          userDateMap.set(date, currentTotal + pagesRead);
-        }
-      }
-
-      previousProgress = currentProgress;
-    });
+  data.forEach((row) => {
+    if (!userPagesPerDay.has(row.user_id)) {
+      userPagesPerDay.set(row.user_id, new Map());
+      userInfoMap.set(row.user_id, {
+        id: row.user_id,
+        email: row.email,
+        username: row.username,
+        first_name: row.first_name,
+        last_name: row.last_name,
+      });
+    }
+    userPagesPerDay.get(row.user_id)!.set(row.progress_date, row.pages_read);
   });
 
   const colors = [
@@ -719,13 +544,13 @@ export async function getProgressOverTime(
   const datasets = Array.from(userPagesPerDay.entries()).map(
     ([userId, dateMap], index) => {
       const color = colors[index % colors.length];
-      const data = dateRange.map((date) => dateMap.get(date) || 0);
+      const chartData = dateRange.map((date) => dateMap.get(date) || 0);
       const userInfo = userInfoMap.get(userId);
       const label = userInfo ? formatUserName(userInfo) : `User ${userId.slice(0, 8)}`;
 
       return {
         label,
-        data,
+        data: chartData,
         borderColor: color,
         backgroundColor: color,
         tension: 0.1,
@@ -733,6 +558,7 @@ export async function getProgressOverTime(
     }
   );
 
+  // Format dates for display
   const formattedDates = dateRange.map((date) => {
     const [, month, day] = date.split("-");
     return `${parseInt(month)}/${parseInt(day)}`;
