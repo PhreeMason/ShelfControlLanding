@@ -4,6 +4,7 @@ import { ActivityTypesChart } from "./components/activity-types-chart";
 import { DeadlinesOverTimeChart } from "./components/deadlines-over-time-chart";
 import { FormatDistributionChart } from "./components/format-distribution-chart";
 import { MostActiveUsersChart } from "./components/most-active-users-chart";
+import { ProfilesCreatedChart } from "./components/profiles-created-chart";
 import { ProgressOverTimeChart } from "./components/progress-over-time-chart";
 import { TopBooksChart } from "./components/top-books-chart";
 import { TopPagesReadChart } from "./components/top-pages-read-chart";
@@ -21,6 +22,10 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="rounded-lg border p-6 lg:col-span-2">
+            <h2 className="text-2xl font-semibold mb-4">Profiles Created (Last 30 Days)</h2>
+            <ProfilesCreatedChart />
+          </div>
           <div className="rounded-lg border p-6">
             <h2 className="text-2xl font-semibold mb-4">Top Books</h2>
             <TopBooksChart />

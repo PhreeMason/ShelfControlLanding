@@ -408,6 +408,53 @@ interface DeadlineProgressQueryResult {
   };
 }
 
+export interface ProfilesCreatedOverTimeData {
+  dates: string[];
+  counts: number[];
+}
+
+export async function getProfilesCreatedOverTime(
+  days: number = 30
+): Promise<ProfilesCreatedOverTimeData> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase.rpc("get_profiles_created_over_time", {
+    p_days: days,
+  });
+
+  if (error || !data || data.length === 0) {
+    return { dates: [], counts: [] };
+  }
+
+  // Build complete date range to fill in gaps
+  const dateRange: string[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    dateRange.push(date.toISOString().split("T")[0]);
+  }
+
+  // Create a map from the RPC results
+  const countByDate = new Map<string, number>();
+  data.forEach((row: { profile_date: string; count: number }) => {
+    countByDate.set(row.profile_date, row.count);
+  });
+
+  // Build the counts array, filling in 0 for missing dates
+  const counts = dateRange.map((date) => countByDate.get(date) || 0);
+
+  // Format dates for display
+  const formattedDates = dateRange.map((date) => {
+    const [, month, day] = date.split("-");
+    return `${parseInt(month)}/${parseInt(day)}`;
+  });
+
+  return {
+    dates: formattedDates,
+    counts,
+  };
+}
+
 export async function getProgressOverTime(
   timezoneOffsetMinutes?: number,
   days: number = 30,
