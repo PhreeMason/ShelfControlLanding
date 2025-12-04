@@ -235,7 +235,10 @@ export async function getTopBooks(limit: number = 10): Promise<TopBookData[]> {
     return [];
   }
 
-  return data;
+  return data.map((item: Omit<TopBookData, 'publication_date'> & { publication_date?: string | null }) => ({
+    ...item,
+    publication_date: item.publication_date ?? null,
+  }));
 }
 
 export interface TopDeadlineUserData {
