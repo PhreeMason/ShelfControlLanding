@@ -69,6 +69,11 @@ export function ProgressOverTimeChart() {
     datasets: data?.datasets || [],
   };
 
+  const maxCount = Math.max(
+    ...(data?.datasets?.flatMap((dataset) => dataset.data) || []),
+    0
+  );
+
   const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -94,7 +99,8 @@ export function ProgressOverTimeChart() {
           text: "Pages Read",
         },
         ticks: {
-          stepSize: 10,
+          // Only use stepSize: 10 for small values to show clean intervals
+          ...(maxCount <= 200 ? { stepSize: 10 } : {}),
         },
       },
       x: {

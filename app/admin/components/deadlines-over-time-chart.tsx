@@ -70,9 +70,16 @@ export function DeadlineStatusChart() {
     ],
   };
 
+  const maxCount = Math.max(...statusData.map((item) => item.count), 0);
+
   const options: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 20,
+      },
+    },
     plugins: {
       legend: {
         display: false,
@@ -96,7 +103,8 @@ export function DeadlineStatusChart() {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1,
+          // Only use stepSize: 1 for small values to show integers
+          ...(maxCount <= 20 ? { stepSize: 1 } : {}),
         },
       },
     },

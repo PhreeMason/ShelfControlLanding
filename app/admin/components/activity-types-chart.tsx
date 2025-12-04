@@ -54,6 +54,11 @@ export function ActivityTypesChart() {
     datasets: filteredDatasets,
   };
 
+  const maxCount = Math.max(
+    ...filteredDatasets.flatMap((dataset) => dataset.data),
+    0
+  );
+
   const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -66,7 +71,8 @@ export function ActivityTypesChart() {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1,
+          // Only use stepSize: 1 for small values to show integers
+          ...(maxCount <= 20 ? { stepSize: 1 } : {}),
         },
       },
     },

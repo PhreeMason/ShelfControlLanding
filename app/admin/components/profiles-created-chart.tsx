@@ -42,9 +42,16 @@ export function ProfilesCreatedChart() {
     ],
   };
 
+  const maxCount = Math.max(...(data?.counts || []), 0);
+
   const options: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 20,
+      },
+    },
     plugins: {
       legend: {
         display: false,
@@ -67,7 +74,8 @@ export function ProfilesCreatedChart() {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1,
+          // Only use stepSize: 1 for small values to show integers
+          ...(maxCount <= 20 ? { stepSize: 1 } : {}),
         },
       },
       x: {
