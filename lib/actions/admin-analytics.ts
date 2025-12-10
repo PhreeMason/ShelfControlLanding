@@ -212,6 +212,34 @@ export interface ProgressOverTimeData {
   }[];
 }
 
+interface ProgressRecord {
+  deadline_id: string;
+  user_id: string;
+  username: string | null;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  date: string;
+  current_progress: number;
+  ignore_in_calcs: boolean;
+}
+
+interface DeadlineProgressQueryResult {
+  deadline_id: string;
+  current_progress: number;
+  ignore_in_calcs: boolean;
+  created_at: string;
+  deadlines: {
+    user_id: string;
+    profiles: {
+      username: string | null;
+      email: string | null;
+      first_name: string | null;
+      last_name: string | null;
+    };
+  };
+}
+
 export interface TopBookData {
   book_id: string;
   title: string;
@@ -496,18 +524,58 @@ export async function getProgressOverTime(
 
   const offsetMinutes = timezoneOffsetMinutes ?? 0;
 
-  const { data, error } = await supabase.rpc("get_progress_over_time", {
-    p_days: days,
-    p_user_ids: userIds && userIds.length > 0 ? userIds : undefined,
-    p_exclude_user_ids: TEST_USER_IDS,
-    p_offset_minutes: offsetMinutes,
-  });
+  const nowLocal = new Date(Date.now() - offsetMinutes * 60 * 1000);
+  const daysAgo = new Date(nowLocal);
+  daysAgo.setDate(daysAgo.getDate() - days);
+  daysAgo.setHours(0, 0, 0, 0);
+  const daysAgoStr = daysAgo.toISOString();
 
-  if (error || !data || data.length === 0) {
+  let query = supabase
+    .from("deadline_progress")
+    .select(
+      `
+      deadline_id,
+      current_progress,
+      ignore_in_calcs,
+      created_at,
+      deadlines!inner(user_id, profiles!inner(username, email, first_name, last_name))
+    `
+    )
+    .gte("created_at", daysAgoStr)
+    .not("deadlines.user_id", "in", `(${TEST_USER_IDS.join(",")})`)
+    .order("deadline_id")
+    .order("created_at");
+
+  if (userIds && userIds.length > 0) {
+    query = query.in("deadlines.user_id", userIds);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
     return { dates: [], datasets: [] };
   }
 
-  // Build complete date range to fill in gaps
+  if (!data || data.length === 0) {
+    return { dates: [], datasets: [] };
+  }
+
+  const records: ProgressRecord[] = (data as DeadlineProgressQueryResult[]).map((record) => {
+    const utcDate = new Date(record.created_at);
+    const localDate = new Date(utcDate.getTime() - offsetMinutes * 60 * 1000);
+    return {
+      deadline_id: record.deadline_id,
+      user_id: record.deadlines.user_id,
+      email: record.deadlines.profiles.email,
+      username: record.deadlines.profiles.username,
+      first_name: record.deadlines.profiles.first_name,
+      last_name: record.deadlines.profiles.last_name,
+      date: localDate.toISOString().split("T")[0],
+      current_progress: record.current_progress,
+      ignore_in_calcs: record.ignore_in_calcs,
+    };
+  });
+
   const dateRange: string[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(Date.now() - offsetMinutes * 60 * 1000);
@@ -515,22 +583,68 @@ export async function getProgressOverTime(
     dateRange.push(date.toISOString().split("T")[0]);
   }
 
-  // Group results by user
+  const deadlineMaxByDate = new Map<string, Map<string, number>>();
+
+  records.forEach((record) => {
+    if (!deadlineMaxByDate.has(record.deadline_id)) {
+      deadlineMaxByDate.set(record.deadline_id, new Map());
+    }
+    const dateMap = deadlineMaxByDate.get(record.deadline_id)!;
+    const currentMax = dateMap.get(record.date) || 0;
+    dateMap.set(record.date, Math.max(currentMax, record.current_progress));
+  });
+
+  const ignoreRecordsByDeadline = new Map<string, Set<string>>();
+  records.forEach((record) => {
+    if (record.ignore_in_calcs) {
+      if (!ignoreRecordsByDeadline.has(record.deadline_id)) {
+        ignoreRecordsByDeadline.set(record.deadline_id, new Set());
+      }
+      ignoreRecordsByDeadline.get(record.deadline_id)!.add(record.date);
+    }
+  });
+
   const userPagesPerDay = new Map<string, Map<string, number>>();
   const userInfoMap = new Map<string, UserInfo>();
 
-  data.forEach((row) => {
-    if (!userPagesPerDay.has(row.user_id)) {
-      userPagesPerDay.set(row.user_id, new Map());
-      userInfoMap.set(row.user_id, {
-        id: row.user_id,
-        email: row.email,
-        username: row.username,
-        first_name: row.first_name,
-        last_name: row.last_name,
-      });
-    }
-    userPagesPerDay.get(row.user_id)!.set(row.progress_date, row.pages_read);
+  deadlineMaxByDate.forEach((dateMap, deadlineId) => {
+    const sortedDates = Array.from(dateMap.keys()).sort();
+    let previousProgress = 0;
+
+    sortedDates.forEach((date) => {
+      const currentProgress = dateMap.get(date)!;
+      const isIgnored = ignoreRecordsByDeadline.get(deadlineId)?.has(date);
+
+      const record = records.find((r) => r.deadline_id === deadlineId && r.date === date);
+
+      if (record) {
+        const userId = record.user_id;
+
+        if (!userPagesPerDay.has(userId)) {
+          userPagesPerDay.set(userId, new Map());
+        }
+
+        if (!userInfoMap.has(userId)) {
+          userInfoMap.set(userId, {
+            id: userId,
+            email: record.email,
+            username: record.username,
+            first_name: record.first_name,
+            last_name: record.last_name,
+          });
+        }
+
+        if (!isIgnored) {
+          const pagesRead = currentProgress - previousProgress;
+
+          const userDateMap = userPagesPerDay.get(userId)!;
+          const currentTotal = userDateMap.get(date) || 0;
+          userDateMap.set(date, currentTotal + pagesRead);
+        }
+      }
+
+      previousProgress = currentProgress;
+    });
   });
 
   const colors = [
@@ -561,7 +675,6 @@ export async function getProgressOverTime(
     }
   );
 
-  // Format dates for display
   const formattedDates = dateRange.map((date) => {
     const [, month, day] = date.split("-");
     return `${parseInt(month)}/${parseInt(day)}`;

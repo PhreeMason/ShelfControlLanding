@@ -46,7 +46,7 @@ function initScrollAnimations() {
     }, observerOptions);
 
     const animatedElements = document.querySelectorAll(
-        '.pain-card, .feature, .step, .section-header'
+        '.pain-card, .feature, .step, .section-header, .pricing-card'
     );
 
     animatedElements.forEach(element => {
@@ -351,3 +351,27 @@ function calculateAudio() {
     paceIndicator.style.background = pace.background;
     paceText.textContent = pace.text;
 }
+
+function switchPricing(plan, evt) {
+    const buttons = document.querySelectorAll('.pricing-toggle-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    if (evt && evt.target) {
+        evt.target.classList.add('active');
+    }
+
+    const priceEl = document.getElementById('pricingPrice');
+    const periodEl = document.getElementById('pricingPeriod');
+    const savingsEl = document.getElementById('pricingSavings');
+
+    if (plan === 'monthly') {
+        priceEl.textContent = '$5';
+        periodEl.textContent = '/month';
+        savingsEl.classList.add('hidden');
+    } else {
+        priceEl.textContent = '$50';
+        periodEl.textContent = '/year';
+        savingsEl.classList.remove('hidden');
+    }
+}
+

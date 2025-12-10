@@ -396,6 +396,111 @@
         </div>
     </section>
 
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <h2 class="section-header">free during early access</h2>
+            <p class="pricing-subtitle">built with feedback from 500+ arc readers</p>
+
+            <div class="pricing-card-wrapper">
+                <div class="pricing-card">
+                    <!-- Header -->
+                    <div class="pricing-header">
+                        <span class="pricing-header-title">Founder Pricing</span>
+                        <span class="pricing-badge">ends at app store launch</span>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="pricing-body">
+                        <!-- Toggle -->
+                        <div class="pricing-toggle">
+                            <button class="pricing-toggle-btn active" onclick="switchPricing('monthly', event)">Monthly</button>
+                            <button class="pricing-toggle-btn" onclick="switchPricing('annual', event)">Annual</button>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="pricing-amount">
+                            <span class="pricing-price" id="pricingPrice">$5</span>
+                            <span class="pricing-period" id="pricingPeriod">/month</span>
+                            <div class="pricing-savings hidden" id="pricingSavings">Save 17%</div>
+                        </div>
+
+                        <hr class="pricing-divider">
+
+                        <!-- Features -->
+                        <div class="pricing-features">
+                            <div class="pricing-feature">
+                                <div class="pricing-feature-icon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="pricing-feature-text">
+                                    <div class="pricing-feature-title">Founder price locked forever</div>
+                                    <p class="pricing-feature-desc">Your rate never increases</p>
+                                </div>
+                            </div>
+                            <div class="pricing-feature">
+                                <div class="pricing-feature-icon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="pricing-feature-text">
+                                    <div class="pricing-feature-title">All features included</div>
+                                    <p class="pricing-feature-desc">No tiers, no upsells, no ads</p>
+                                </div>
+                            </div>
+                            <div class="pricing-feature">
+                                <div class="pricing-feature-icon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="pricing-feature-text">
+                                    <div class="pricing-feature-title">First Month Free</div>
+                                    <p class="pricing-feature-desc">If you don't love it, export your data and cancel anytime</p>
+                                </div>
+                            </div>
+                            <div class="pricing-feature">
+                                <div class="pricing-feature-icon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="pricing-feature-text">
+                                    <div class="pricing-feature-title">iOS & Android</div>
+                                    <p class="pricing-feature-desc">Use on any device</p>
+                                </div>
+                            </div>
+                            <div class="pricing-feature">
+                                <div class="pricing-feature-icon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="pricing-feature-text">
+                                    <div class="pricing-feature-title">Pricing adjusted for your region</div>
+                                    <p class="pricing-feature-desc">Fair rates wherever you are</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <button class="pricing-cta" onclick="scrollToEarlyAccess(event)">Join Early Access - It's Free</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After pricing note -->
+            <div class="pricing-after">
+                <div class="pricing-after-badge">
+                    <p>At App Store Launch: <span class="pricing-after-price" id="pricingAfterPrice">$8/month or $80/year</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- FAQ Section -->
     <section class="faq">
         <div class="container">
@@ -446,7 +551,7 @@
 
                 <form class="early-access-form" id="early-accessForm" action="https://api.web3forms.com/submit"
                     method="POST">
-                    <input type="hidden" name="access_key" value="8282955d-7626-479b-a2ad-d53edc570acf">
+                    <input type="hidden" name="access_key" value="bade318a-1d35-42d4-b87c-9535ef866e14">
                     <p class="form-required-note">* indicates required field</p>
                     <div class="form-field">
                         <label for="email">email address *</label>
