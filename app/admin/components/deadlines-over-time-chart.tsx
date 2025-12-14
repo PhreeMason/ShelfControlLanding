@@ -15,7 +15,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useQuery } from "@tanstack/react-query";
 import { getDeadlinesByStatus } from "@/lib/actions/admin-analytics";
-import { UserFilter } from "./user-filter";
+import { SingleUserFilter } from "./single-user-filter";
 
 ChartJS.register(
   CategoryScale,
@@ -51,11 +51,12 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export function DeadlineStatusChart() {
-  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data: statusData = [], isLoading } = useQuery({
-    queryKey: ["deadline-status-breakdown", selectedUserIds],
-    queryFn: () => getDeadlinesByStatus(selectedUserIds.length > 0 ? selectedUserIds : undefined),
+    queryKey: ["deadline-status-breakdown", selectedUserId],
+    queryFn: () => getDeadlinesByStatus([selectedUserId!]),
+    enabled: !!selectedUserId,
   });
 
   const chartData = {
@@ -110,27 +111,18 @@ export function DeadlineStatusChart() {
     },
   };
 
-  const handleUserToggle = (userId: string) => {
-    setSelectedUserIds((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedUserIds([]);
-  };
-
   return (
     <div className="space-y-4">
-      <UserFilter
-        selectedUserIds={selectedUserIds}
-        onUserToggle={handleUserToggle}
-        onClearFilters={clearFilters}
+      <SingleUserFilter
+        selectedUserId={selectedUserId}
+        onUserSelect={setSelectedUserId}
       />
 
-      {isLoading ? (
+      {!selectedUserId ? (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Search for a user to view deadline status
+        </div>
+      ) : isLoading ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
         </div>

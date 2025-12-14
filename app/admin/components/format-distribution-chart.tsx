@@ -12,7 +12,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useQuery } from "@tanstack/react-query";
 import { getFormatDistribution } from "@/lib/actions/admin-analytics";
-import { UserFilter } from "./user-filter";
+import { SingleUserFilter } from "./single-user-filter";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -31,14 +31,12 @@ const FORMAT_LABELS: Record<string, string> = {
 };
 
 export function FormatDistributionChart() {
-  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data: formatData = [], isLoading } = useQuery({
-    queryKey: ["format-distribution", selectedUserIds],
-    queryFn: () =>
-      getFormatDistribution(
-        selectedUserIds.length > 0 ? selectedUserIds : undefined
-      ),
+    queryKey: ["format-distribution", selectedUserId],
+    queryFn: () => getFormatDistribution([selectedUserId!]),
+    enabled: !!selectedUserId,
   });
 
   const total = formatData.reduce((sum, item) => sum + item.count, 0);
@@ -83,27 +81,18 @@ export function FormatDistributionChart() {
     },
   };
 
-  const handleUserToggle = (userId: string) => {
-    setSelectedUserIds((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedUserIds([]);
-  };
-
   return (
     <div className="space-y-4">
-      <UserFilter
-        selectedUserIds={selectedUserIds}
-        onUserToggle={handleUserToggle}
-        onClearFilters={clearFilters}
+      <SingleUserFilter
+        selectedUserId={selectedUserId}
+        onUserSelect={setSelectedUserId}
       />
 
-      {isLoading ? (
+      {!selectedUserId ? (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Search for a user to view format distribution
+        </div>
+      ) : isLoading ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
         </div>

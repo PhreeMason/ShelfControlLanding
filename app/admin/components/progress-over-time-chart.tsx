@@ -14,8 +14,8 @@ import {
   ChartOptions,
 } from "chart.js";
 import { useQuery } from "@tanstack/react-query";
-import { getProgressOverTime, getAllUsers } from "@/lib/actions/admin-analytics";
-import { UserFilter } from "./user-filter";
+import { getProgressOverTime } from "@/lib/actions/admin-analytics";
+import { SingleUserFilter } from "./single-user-filter";
 
 ChartJS.register(
   CategoryScale,
@@ -31,38 +31,18 @@ type TimeRange = 7 | 14 | 21 | 30;
 
 export function ProgressOverTimeChart() {
   const [selectedDays, setSelectedDays] = useState<TimeRange>(30);
-  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const timezoneOffset = new Date().getTimezoneOffset();
 
-  const { data: users = [] } = useQuery({
-    queryKey: ["all-users"],
-    queryFn: getAllUsers,
-  });
-
   const { data, isLoading } = useQuery({
-    queryKey: ["progress-over-time", timezoneOffset, selectedDays, selectedUserIds],
+    queryKey: ["progress-over-time", timezoneOffset, selectedDays, selectedUserId],
     queryFn: () => getProgressOverTime(
       timezoneOffset,
       selectedDays,
-      selectedUserIds.length > 0 ? selectedUserIds : undefined
+      [selectedUserId!]
     ),
+    enabled: !!selectedUserId,
   });
-
-  const handleUserToggle = (userId: string) => {
-    setSelectedUserIds((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedUserIds([]);
-  };
-
-  const selectAllUsers = () => {
-    setSelectedUserIds(users.map((u) => u.id));
-  };
 
   const chartData = {
     labels: data?.dates || [],
@@ -132,20 +112,18 @@ export function ProgressOverTimeChart() {
         ))}
       </div>
 
-      <UserFilter
-        selectedUserIds={selectedUserIds}
-        onUserToggle={handleUserToggle}
-        onClearFilters={clearFilters}
-        onSelectAll={selectAllUsers}
+      <SingleUserFilter
+        selectedUserId={selectedUserId}
+        onUserSelect={setSelectedUserId}
       />
 
-      {isLoading ? (
+      {!selectedUserId ? (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Search for a user to view progress
+        </div>
+      ) : isLoading ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           Loading...
-        </div>
-      ) : selectedUserIds.length === 0 ? (
-        <div className="flex items-center justify-center h-64 text-muted-foreground">
-          Select users to display
         </div>
       ) : !data || data.datasets.length === 0 ? (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
