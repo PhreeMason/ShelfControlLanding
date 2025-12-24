@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleFormSubmission();
     animateOnLoad();
     initFAQ();
+    initRoadmap();
     setupAndroidHint();
 
     const today = new Date();
@@ -183,6 +184,19 @@ function initFAQ() {
             });
 
             item.classList.toggle('active');
+        });
+    });
+}
+
+function initRoadmap() {
+    const roadmapPhases = document.querySelectorAll('.roadmap-phase');
+
+    roadmapPhases.forEach(phase => {
+        const header = phase.querySelector('.roadmap-phase-header');
+
+        header.addEventListener('click', () => {
+            // Toggle current phase (allows multiple open)
+            phase.classList.toggle('active');
         });
     });
 }
