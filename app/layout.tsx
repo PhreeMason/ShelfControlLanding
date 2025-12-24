@@ -10,7 +10,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "ShelfControl - stop forgetting which arcs are due",
+  title: "ARC Tracking App for Book Reviewers | ShelfControl",
   description: "Stop forgetting which ARCs are due. See all your review copies in one place with days left and pages per day at your comfortable pace.",
   keywords: "ARC, arc reading tracker, advance reader copy, arc tracker, arc tracker app, NetGalley, arc due dates, forgetting arcs, ADHD reading, arc organizer, multiple arcs, ebook arc, audio arc, book reviewer, pages per day, arc calendar, overwhelmed by arcs",
   icons: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     apple: "/assets/transparent-logo.png",
   },
   openGraph: {
-    title: "ShelfControl - stop forgetting which arcs are due",
+    title: "ARC Tracking App for Book Reviewers | ShelfControl",
     description: "Finally see all your ARCs in one place. Know which ones are due, how many pages per day you need, and what you can finish at your comfortable pace.",
     url: defaultUrl,
     siteName: "ShelfControl",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShelfControl - stop forgetting which arcs are due",
+    title: "ARC Tracking App for Book Reviewers | ShelfControl",
     description: "Finally see all your ARCs in one place. Know which ones are due, how many pages per day you need, and what you can finish at your comfortable pace.",
     images: ["/assets/dashboard-1.png"],
   },
