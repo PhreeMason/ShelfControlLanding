@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "ShelfControl - stop forgetting which arcs are due",
   description: "Stop forgetting which ARCs are due. See all your review copies in one place with days left and pages per day at your comfortable pace.",
-  keywords: "ARC, advance reader copy, NetGalley, arc due dates, forgetting arcs, ADHD reading, arc organizer, multiple arcs, ebook arc, audio arc, book reviewer, pages per day, arc calendar, overwhelmed by arcs",
+  keywords: "ARC, arc reading tracker, advance reader copy, arc tracker, arc tracker app, NetGalley, arc due dates, forgetting arcs, ADHD reading, arc organizer, multiple arcs, ebook arc, audio arc, book reviewer, pages per day, arc calendar, overwhelmed by arcs",
   icons: {
     icon: "/assets/transparent-logo.png",
     apple: "/assets/transparent-logo.png",
