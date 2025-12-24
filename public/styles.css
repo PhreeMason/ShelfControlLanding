@@ -2154,7 +2154,7 @@ select:focus {
 }
 
 .roadmap-footer a {
-    color: var(--lavender);
+    color: var(--dark-purple);
     text-decoration: none;
     font-weight: 600;
     transition: var(--transition);
