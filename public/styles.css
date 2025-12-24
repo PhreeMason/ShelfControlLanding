@@ -1937,7 +1937,7 @@ select:focus {
 /* Pricing Section */
 .pricing-section {
     padding: var(--spacing-3xl) 0;
-    background: linear-gradient(180deg, var(--cream) 0%, rgba(232, 180, 184, 0.2) 100%);
+    background: linear-gradient(135deg, var(--cream) 0%, #F5DDD8 100%);
     text-align: center;
 }
 
@@ -2021,6 +2021,10 @@ select:focus {
     box-shadow: var(--shadow-sm);
 }
 
+.pricing-toggle-btn:focus {
+    outline: none;
+}
+
 /* Price Display */
 .pricing-amount {
     text-align: center;
@@ -2053,6 +2057,12 @@ select:focus {
 
 .pricing-savings.hidden {
     display: none;
+}
+
+.pricing-billing-note {
+    color: var(--gray-medium);
+    font-size: var(--font-size-sm);
+    margin-top: 8px;
 }
 
 /* Pricing Divider */

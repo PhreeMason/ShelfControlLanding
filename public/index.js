@@ -363,15 +363,18 @@ function switchPricing(plan, evt) {
     const priceEl = document.getElementById('pricingPrice');
     const periodEl = document.getElementById('pricingPeriod');
     const savingsEl = document.getElementById('pricingSavings');
+    const billingNoteEl = document.getElementById('pricingBillingNote');
 
     if (plan === 'monthly') {
         priceEl.textContent = '$5';
         periodEl.textContent = '/month';
         savingsEl.classList.add('hidden');
+        billingNoteEl.textContent = 'billed monthly';
     } else {
-        priceEl.textContent = '$50';
-        periodEl.textContent = '/year';
+        priceEl.textContent = '$4.17';
+        periodEl.textContent = '/month';
         savingsEl.classList.remove('hidden');
+        billingNoteEl.textContent = 'billed yearly at $50';
     }
 }
 
